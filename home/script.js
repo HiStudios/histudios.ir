@@ -1,88 +1,88 @@
 (function(){
   'use strict';
 
-  // --- 1. Theme Management ---
+  // --- 1. Element Definitions ---
   const root = document.documentElement;
   const themeBtn = document.getElementById('themeBtn');
+  const themeIconSun = document.getElementById('themeIconSun');
+  const themeIconMoon = document.getElementById('themeIconMoon');
+  const themeMeta = document.getElementById('theme-color-meta');
+  
+  const lightThemeColor = '#f2f4f7';
+  const darkThemeColor = '#0c111d';
 
-  // Set theme on initial load
-  function applyInitialTheme() {
-    const storedTheme = localStorage.getItem('hi:theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const isDark = storedTheme ? storedTheme === 'dark' : prefersDark;
-    if (isDark) { 
-      root.classList.add('dark'); 
+  // --- 2. Core Functions ---
+
+  /**
+   * Applies the theme (dark/light) to the entire page.
+   * @param {boolean} isDark - True if dark mode should be enabled.
+   */
+  function applyTheme(isDark) {
+    if (isDark) {
+      root.classList.add('dark');
+      if (themeMeta) themeMeta.setAttribute('content', darkThemeColor);
+    } else {
+      root.classList.remove('dark');
+      if (themeMeta) themeMeta.setAttribute('content', lightThemeColor);
+    }
+    // Toggle icon visibility based on theme
+    if (themeIconSun && themeIconMoon) {
+        themeIconSun.style.display = isDark ? 'none' : 'inline-block';
+        themeIconMoon.style.display = isDark ? 'inline-block' : 'none';
     }
   }
+
+  // --- 3. Animation Logic ---
+
+  function createRipple(button, event) {
+    const ripple = document.createElement("span");
+    const diameter = Math.max(button.clientWidth, button.clientHeight);
+    const radius = diameter / 2;
+    
+    ripple.style.width = ripple.style.height = `${diameter}px`;
+    ripple.style.left = `${event.clientX - button.getBoundingClientRect().left - radius}px`;
+    ripple.style.top = `${event.clientY - button.getBoundingClientRect().top - radius}px`;
+    ripple.classList.add("ripple");
+    
+    const existingRipple = button.querySelector(".ripple");
+    if(existingRipple) existingRipple.remove();
+    
+    button.appendChild(ripple);
+  }
+
+  // --- 4. Event Listeners ---
 
   // Handle theme toggle button click
   if (themeBtn) {
     themeBtn.addEventListener('click', () => {
-      root.classList.toggle('dark');
-      localStorage.setItem('hi:theme', root.classList.contains('dark') ? 'dark' : 'light');
+      const isDark = !root.classList.contains('dark');
+      localStorage.setItem('hi:theme', isDark ? 'dark' : 'light');
+      applyTheme(isDark);
     });
   }
 
   // Sync with OS theme changes if no preference is saved
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
     if (!localStorage.getItem('hi:theme')) {
-      if (e.matches) { root.classList.add('dark'); }
-      else { root.classList.remove('dark'); }
+      applyTheme(e.matches);
     }
   });
 
-  applyInitialTheme();
-
-
-  // --- 2. Animation Logic ---
-
-  // Function to detect if it's a touch device
-  const isTouchDevice = () => 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-
-  // A. Ripple animation for buttons (runs on all devices on click)
+  // Attach ripple effect to all buttons
   const rippleButtons = document.querySelectorAll('.toggle-btn, .social');
   rippleButtons.forEach(button => {
     button.addEventListener('click', (e) => {
-      const ripple = document.createElement("span");
-      const diameter = Math.max(button.clientWidth, button.clientHeight);
-      const radius = diameter / 2;
-      ripple.style.width = ripple.style.height = `${diameter}px`;
-      ripple.style.left = `${e.clientX - button.getBoundingClientRect().left - radius}px`;
-      ripple.style.top = `${e.clientY - button.getBoundingClientRect().top - radius}px`;
-      ripple.classList.add("ripple");
-      
-      const existingRipple = button.querySelector(".ripple");
-      if(existingRipple) existingRipple.remove();
-
-      button.appendChild(ripple);
-      
-      setTimeout(() => { if (ripple) ripple.remove(); }, 500);
+      createRipple(button, e);
     });
   });
 
-  // B. Click-based "fire-and-forget" animations for TOUCH devices ONLY
-  if (isTouchDevice()) {
-    // Lift animation for buttons
-    const liftButtons = document.querySelectorAll('.toggle-btn, .social');
-    liftButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        button.classList.add('animate-lift');
-        button.addEventListener('animationend', () => {
-          button.classList.remove('animate-lift');
-        }, { once: true });
-      });
-    });
+  // --- 5. Initial Load ---
 
-    // Color flash animation for the founder link
-    const founderLink = document.querySelector('.founder-link');
-    if (founderLink) {
-      founderLink.addEventListener('click', () => {
-        founderLink.classList.add('animate-link-color');
-        founderLink.addEventListener('animationend', () => {
-          founderLink.classList.remove('animate-link-color');
-        }, { once: true });
-      });
-    }
-  }
-  
+  // Set theme on initial page load
+  const storedTheme = localStorage.getItem('hi:theme');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const initialIsDark = storedTheme ? storedTheme === 'dark' : prefersDark;
+  applyTheme(initialIsDark);
+
 })();
+ 
