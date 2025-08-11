@@ -8,8 +8,8 @@
   const themeIconMoon = document.getElementById('themeIconMoon');
   const themeMeta = document.getElementById('theme-color-meta');
   
-  const lightThemeColor = '#f2f4f7';
-  const darkThemeColor = '#0c111d';
+  const lightThemeColor = '#FFC300';
+  const darkThemeColor = '#FFC300';
 
   // --- 2. Core Functions ---
 
