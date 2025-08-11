@@ -1,33 +1,45 @@
 (function(){
   'use strict';
+
+  // --- 1. Theme Management ---
   const root = document.documentElement;
   const themeBtn = document.getElementById('themeBtn');
 
-  // --- Theme Toggle Logic ---
+  // Set theme on initial load
   function applyInitialTheme() {
     const storedTheme = localStorage.getItem('hi:theme');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     const isDark = storedTheme ? storedTheme === 'dark' : prefersDark;
-    if (isDark) { root.classList.add('dark'); }
+    if (isDark) { 
+      root.classList.add('dark'); 
+    }
   }
+
+  // Handle theme toggle button click
   if (themeBtn) {
     themeBtn.addEventListener('click', () => {
       root.classList.toggle('dark');
       localStorage.setItem('hi:theme', root.classList.contains('dark') ? 'dark' : 'light');
     });
   }
+
+  // Sync with OS theme changes if no preference is saved
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
     if (!localStorage.getItem('hi:theme')) {
       if (e.matches) { root.classList.add('dark'); }
       else { root.classList.remove('dark'); }
     }
   });
+
   applyInitialTheme();
 
-  // --- Animation Logic ---
+
+  // --- 2. Animation Logic ---
+
+  // Function to detect if it's a touch device
   const isTouchDevice = () => 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
-  // 1. Ripple animation for buttons (runs on all devices)
+  // A. Ripple animation for buttons (runs on all devices on click)
   const rippleButtons = document.querySelectorAll('.toggle-btn, .social');
   rippleButtons.forEach(button => {
     button.addEventListener('click', (e) => {
@@ -48,7 +60,7 @@
     });
   });
 
-  // 2. Click-based animations for TOUCH devices ONLY
+  // B. Click-based "fire-and-forget" animations for TOUCH devices ONLY
   if (isTouchDevice()) {
     // Lift animation for buttons
     const liftButtons = document.querySelectorAll('.toggle-btn, .social');
@@ -72,4 +84,5 @@
       });
     }
   }
+  
 })();
