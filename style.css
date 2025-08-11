@@ -1,0 +1,138 @@
+:root{
+  --bg: #f2f4f7;
+  --card: #ffffff;
+  --text: #1d2939;
+  --muted: #667085;
+  --glass: rgba(255,255,255,0.5);
+  --shadow: 0 10px 30px rgba(17, 24, 39, 0.05);
+  --radius: 14px;
+  --ripple-color: rgba(0, 0, 0, 0.1);
+  --button-shadow: 0 2px 5px rgba(0,0,0,0.06);
+  --button-shadow-hover: 0 6px 12px rgba(0,0,0,0.1);
+  --button-border-color: rgba(0,0,0,0.07);
+}
+:root.dark{
+  --bg: #0c111d;
+  --card: #161b29;
+  --text: #e5e7eb;
+  --muted: #909db0;
+  --glass: rgba(255,255,255,0.04);
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  --ripple-color: rgba(255, 255, 255, 0.15);
+  --button-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  --button-shadow-hover: 0 6px 12px rgba(0,0,0,0.3);
+  --button-border-color: rgba(255,255,255,0.1);
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+* { -webkit-tap-highlight-color: transparent; }
+body{
+  margin:0;
+  /* تغییر فونت به وزیرمتن */
+  font-family: 'Vazirmatn', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  background:var(--bg);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:40px 20px 40px;
+  transition:background .35s ease, color .35s ease;
+}
+
+.container{ width:100%; max-width:880px; text-align:center; }
+.topbar{ margin-bottom:22px; }
+.theme-toggle{ position:absolute; right:16px; top:16px; }
+
+.toggle-btn, .social {
+  border: 1px solid var(--button-border-color);
+  cursor:pointer; display:inline-flex; align-items:center; justify-content:center;
+  position:relative; overflow:hidden;
+  background:var(--card);
+  box-shadow: var(--button-shadow);
+  transition: all .2s ease-in-out;
+  -webkit-appearance:none;
+  text-decoration:none;
+  color:var(--text);
+}
+
+.toggle-btn { width:52px; height:52px; border-radius:50%; background:linear-gradient(135deg,var(--card),var(--glass)); }
+.social { width:54px; height:54px; border-radius: 50%; }
+
+.toggle-btn:focus-visible, .social:focus-visible { outline: 2px solid var(--muted); outline-offset: 2px; }
+.toggle-btn:focus:not(:focus-visible),.social:focus:not(:focus-visible) { outline: none; }
+
+.ripple {
+    position: absolute; border-radius: 50%; background-color: var(--ripple-color);
+    transform: scale(0); animation: ripple-effect 0.5s ease-out; pointer-events: none;
+}
+@keyframes ripple-effect { to { transform: scale(4); opacity: 0; } }
+
+/* Keyframe animations for JS to use on touch devices */
+@keyframes lift-and-return {
+  50% {
+    transform: translateY(-2px);
+    box-shadow: var(--button-shadow-hover);
+  }
+}
+.animate-lift {
+  animation: lift-and-return 0.4s ease-in-out;
+}
+@keyframes link-flash {
+  50% { color: var(--muted); }
+}
+.animate-link-color {
+  animation: link-flash 0.5s ease-in-out;
+}
+
+/* Standard hover effects for devices with a mouse */
+@media (hover: hover) and (pointer: fine) {
+  .toggle-btn:hover, .social:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--button-shadow-hover);
+  }
+  .founder-link:hover {
+      color: var(--muted);
+  }
+}
+
+.logo{ font-size:48px; font-weight:700; letter-spacing:0.6px; margin:0; padding:0; }
+.subtext{ margin-top:8px; color:var(--muted); font-size:14px; line-height:1.8; }
+
+.founder-section {
+    display: flex; justify-content: center; align-items: center;
+    gap: 8px; margin-top: 16px; color: var(--muted); font-size: 14px;
+}
+.founder-link {
+    color: var(--text);
+    font-weight: 600;
+    text-decoration: none;
+    transition: color .2s ease;
+}
+
+.socials{ display:flex; gap:14px; justify-content:center; margin-top:24px; }
+.social svg{ width:22px; height:22px; z-index: 1; }
+.toggle-btn svg { z-index: 1; }
+
+.card{
+  position:relative; 
+  background:var(--card);
+  border: 1px solid var(--button-border-color); 
+  border-radius:var(--radius); 
+  padding:36px; 
+  box-shadow:var(--shadow);
+}
+
+#moon { display: none; }
+.dark #sun { display: none; }
+.dark #moon { display: inline-block; }
+
+.site-footer{ margin-top:20px; color:var(--muted); font-size:13px; text-align:center; }
+
+@media (max-width:520px){
+  .logo{font-size:34px}
+  .toggle-btn{width:46px;height:46px}
+  .social{width:48px;height:48px}
+}
