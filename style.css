@@ -1,0 +1,18 @@
+/* --- Basic Reset & Typography --- */
+body { 
+    background-color: #111; 
+    color: #fff; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    height: 100vh; 
+    margin: 0;
+    font-family: 'Vazirmatn', sans-serif; 
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* --- Loader Text Style --- */
+p { 
+    font-size: 1.2rem; 
+}
