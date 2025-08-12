@@ -29,5 +29,10 @@ export async function onRequest(context) {
     return context.rewrite(interstitialUrl.href);
   }
 
+  // برای مرورگرهای عادی، روت را به /home ریدایرکت کن
+  if (url.pathname === '/') {
+    return context.rewrite(new URL('/home/', url.origin).href);
+  }
+
   return next();
 }
