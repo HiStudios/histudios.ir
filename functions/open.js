@@ -18,10 +18,18 @@ export async function onRequest(context) {
     const WHITELIST = [
       "histudios.ir",
       "www.histudios.ir",
-      "cdn.histudios.ir"
+      "cdn.histudios.ir",
+      "*.histudios.ir"
     ];
 
-    if (!WHITELIST.includes(target.hostname.toLowerCase())) {
+    const hostname = target.hostname.toLowerCase();
+    const isAllowed = WHITELIST.some(domain => 
+      domain.startsWith('*') 
+        ? hostname.endsWith(domain.slice(2)) 
+        : hostname === domain
+    );
+
+    if (!isAllowed) {
       return new Response("❌ مقصد در لیست سفید نیست.", { status: 400 });
     }
 
