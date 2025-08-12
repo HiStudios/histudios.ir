@@ -1,9 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // گرفتن URL اصلی از پارامتر 'destination'
   const params = new URLSearchParams(window.location.search);
   const REAL_TARGET = params.get('destination') || '/home/';
-  
-  // اکنون از تابع /open امنیتی برای ریدایرکت استفاده می‌کنیم
   const DESTINATION = "/open?u=" + encodeURIComponent(REAL_TARGET);
 
   const interstitial = document.getElementById('interstitial');
@@ -19,14 +16,15 @@ document.addEventListener('DOMContentLoaded', () => {
     
     if(/Android/i.test(ua)){
       try {
-        const targetHost = new URL(REAL_TARGET).host;
-        const intentUrl = `intent://${targetHost}/#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=${encodeURIComponent(REAL_TARGET)};end`;
+        // ساخت لینک با در نظر گرفتن مسیر صحیح
+        const targetUrl = new URL(REAL_TARGET);
+        const intentUrl = `intent://${targetUrl.host}/#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=${encodeURIComponent(DESTINATION)};end`;
         window.location.href = intentUrl;
       } catch {
-        window.open(REAL_TARGET, '_blank');
+        window.open(DESTINATION, '_blank');
       }
     } else {
-      window.open(REAL_TARGET, '_blank');
+      window.open(DESTINATION, '_blank');
     }
   });
 
@@ -35,4 +33,4 @@ document.addEventListener('DOMContentLoaded', () => {
     fallback.setAttribute('aria-hidden','false');
     window.location.replace(REAL_TARGET);
   });
-});
+}); 
