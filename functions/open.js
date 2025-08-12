@@ -1,20 +1,22 @@
-// functions/open.js
 export async function onRequest(context) {
   try {
     const url = new URL(context.request.url);
     const targetParam = url.searchParams.get("u");
+    
+    // اگر پارامتر u وجود ندارد
     if (!targetParam) {
-      return new Response("❌ پارامتر u الزامی است.", { status: 400 });
+      return Response.redirect(new URL('/home/', context.request.url).href, 302);
     }
 
     let target;
     try {
+      // ساخت URL از پارامتر
       target = new URL(targetParam);
     } catch {
-      return new Response("❌ آدرس نامعتبر.", { status: 400 });
+      return Response.redirect(new URL('/home/', context.request.url).href, 302);
     }
 
-    // ✅ لیست سفید دامنه‌ها
+    // لیست سفید دامنه‌ها
     const WHITELIST = [
       "histudios.ir",
       "www.histudios.ir",
@@ -23,19 +25,20 @@ export async function onRequest(context) {
     ];
 
     const hostname = target.hostname.toLowerCase();
-    const isAllowed = WHITELIST.some(domain => 
-      domain.startsWith('*') 
-        ? hostname.endsWith(domain.slice(2)) 
-        : hostname === domain
-    );
+    const isAllowed = WHITELIST.some(domain => {
+      if (domain.startsWith('*.')) {
+        return hostname.endsWith(domain.slice(2));
+      }
+      return hostname === domain;
+    });
 
     if (!isAllowed) {
-      return new Response("❌ مقصد در لیست سفید نیست.", { status: 400 });
+      return Response.redirect(new URL('/home/', context.request.url).href, 302);
     }
 
-    // ✅ Redirect امن
+    // ریدایرکت امن
     return Response.redirect(target.toString(), 302);
   } catch (err) {
-    return new Response("خطای سرور", { status: 500 });
+    return Response.redirect(new URL('/home/', context.request.url).href, 302);
   }
-}
+} 
