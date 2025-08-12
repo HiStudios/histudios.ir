@@ -1,6 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
   const params = new URLSearchParams(window.location.search);
-  const REAL_TARGET = params.get('destination') || '/home/';
+  let REAL_TARGET = params.get('destination') || '/home/';
+  
+  // اگر مقصد '/' است، آن را به '/home/' تغییر بده
+  if (REAL_TARGET === '/') {
+    REAL_TARGET = '/home/';
+  }
+  
   const DESTINATION = "/open?u=" + encodeURIComponent(REAL_TARGET);
 
   const interstitial = document.getElementById('interstitial');
@@ -17,20 +23,21 @@ document.addEventListener('DOMContentLoaded', () => {
     if(/Android/i.test(ua)){
       try {
         // ساخت لینک با در نظر گرفتن مسیر صحیح
-        const targetUrl = new URL(REAL_TARGET);
-        const intentUrl = `intent://${targetUrl.host}/#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=${encodeURIComponent(DESTINATION)};end`;
+        const targetUrl = new URL(REAL_TARGET, window.location.origin);
+        const intentUrl = `intent://${targetUrl.host}/#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=${encodeURIComponent(REAL_TARGET)};end`;
         window.location.href = intentUrl;
       } catch {
-        window.open(DESTINATION, '_blank');
+        window.location.href = REAL_TARGET;
       }
     } else {
-      window.open(DESTINATION, '_blank');
+      // برای iOS و سایر دستگاه‌ها
+      window.location.href = REAL_TARGET;
     }
   });
 
   skipBtn.addEventListener('click', () => {
     interstitial.setAttribute('aria-hidden','true');
     fallback.setAttribute('aria-hidden','false');
-    window.location.replace(REAL_TARGET);
+    window.location.href = REAL_TARGET;
   });
-}); 
+});
