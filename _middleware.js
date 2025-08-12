@@ -8,14 +8,16 @@ export async function onRequest(context) {
   const userAgent = request.headers.get("user-agent") || "";
   const url = new URL(request.url);
 
-  // لیست مسیرهایی که نباید بررسی شوند
+  // لیست مسیرهای استثنا
   const EXCLUDED_PATHS = [
     '/openpage',
     '/open',
     '/home',
-    '/assets'
+    '/assets',
+    '/sitemap.xml',
+    '/favicon.ico'
   ];
-  
+
   // اگر مسیر در لیست استثناهاست، عبور بده
   if (EXCLUDED_PATHS.some(path => url.pathname.startsWith(path))) {
     return next();
@@ -23,16 +25,20 @@ export async function onRequest(context) {
 
   // اگر مرورگر داخلی است
   if (detectInApp(userAgent)) {
-    const originalUrl = url.href;
+    // برای روت، مقصد را به '/' تنظیم کن
+    const originalUrl = url.pathname === '/' ? '/' : url.href;
+    
+    // ساخت URL صفحه انتقال
     const interstitialUrl = new URL('/openpage/index.html', url.origin);
     interstitialUrl.searchParams.set('destination', originalUrl);
-    return context.rewrite(interstitialUrl.href);
+    
+    return Response.redirect(interstitialUrl.href, 302);
   }
 
   // برای مرورگرهای عادی، روت را به /home ریدایرکت کن
   if (url.pathname === '/') {
-    return context.rewrite(new URL('/home/', url.origin).href);
+    return Response.redirect(new URL('/home/', url.origin).href, 302);
   }
 
   return next();
-}
+} 
