@@ -1,5 +1,3 @@
-console.log("Hi Studios Script Loaded Successfully!");
-
 (function(){
   'use strict';
 
