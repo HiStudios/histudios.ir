@@ -8,20 +8,26 @@ export async function onRequest(context) {
   const userAgent = request.headers.get("user-agent") || "";
   const url = new URL(request.url);
 
-  // فقط در صورتی که مرورگر داخلی باشد، منطق را اجرا کن
+  // لیست مسیرهایی که نباید بررسی شوند
+  const EXCLUDED_PATHS = [
+    '/openpage',
+    '/open',
+    '/home',
+    '/assets'
+  ];
+  
+  // اگر مسیر در لیست استثناهاست، عبور بده
+  if (EXCLUDED_PATHS.some(path => url.pathname.startsWith(path))) {
+    return next();
+  }
+
+  // اگر مرورگر داخلی است
   if (detectInApp(userAgent)) {
-    // از لوپ بی‌نهایت جلوگیری کن
-    if (url.pathname.startsWith('/openpage')) {
-      return next();
-    }
-    
-    // کاربر را به صفحه openpage منتقل کن
     const originalUrl = url.href;
-    const interstitialUrl = new URL('/openpage/', url.origin);
+    const interstitialUrl = new URL('/openpage/index.html', url.origin);
     interstitialUrl.searchParams.set('destination', originalUrl);
     return context.rewrite(interstitialUrl.href);
   }
 
-  // برای تمام مرورگرهای عادی، هیچ کاری انجام نده و اجازه بده درخواست عبور کند
   return next();
 }
