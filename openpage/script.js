@@ -1,25 +1,76 @@
-(function() {
-    // --- Configuration ---
-    // آدرس مقصد نهایی که کاربران به آن هدایت می‌شوند.
-    const destinationURL = "https://histudios.ir/home/";
+// مسیر امن به Worker — مقصد واقعی را فقط از این طریق باز می‌کنیم
+const REAL_TARGET = "https://histudios.ir/home/";
+const DESTINATION = "/open?u=" + encodeURIComponent(REAL_TARGET);
 
-    // --- Logic ---
-    // با یک عبارت باقاعده (Regex) بررسی می‌کنیم که آیا کاربر در مرورگر داخلی اپلیکیشن‌هاست یا نه.
-    const isInAppBrowser = /FBAN|FBAV|Instagram|Telegram|Twitter/i.test(navigator.userAgent);
-    
-    // اگر کاربر در مرورگر داخلی *نبود*، بلافاصله او را به صورت عادی به مقصد هدایت می‌کنیم.
-    if (!isInAppBrowser) {
-        window.location.href = destinationURL;
-        return;
+// دامنه‌های مجاز برای چک کلاینت (چک اصلی سمت سرور انجام میشه)
+const LOCAL_WHITELIST = ["histudios.ir", "www.histudios.ir", "cdn.histudios.ir"];
+
+function detectInApp(){
+  const ua = navigator.userAgent || "";
+  const inAppTokens = /(FBAN|FBAV|Instagram|Telegram|Twitter|Line|WhatsApp|WebView|wv|FB_IAB|MicroMessenger)/i;
+  return inAppTokens.test(ua) || /Android.*(wv|Version\/)/i.test(ua);
+}
+
+function buildAndroidIntent(target){
+  const u = encodeURIComponent(target);
+  const packageName = 'com.android.chrome';
+  return `intent://${window.location.host + window.location.pathname}#Intent;scheme=https;package=${packageName};S.browser_fallback_url=${u};end`;
+}
+
+function tryIOSSchemes(target){
+  const schemes = [
+    'googlechrome://navigate?url=',
+    'googlechromes://navigate?url=',
+    'firefox://open-url?url=',
+    'edge://open-url?url=',
+    'brave://open-url?url='
+  ];
+  let i = 0;
+  function attemptNext(){
+    if(i >= schemes.length) return;
+    window.location = schemes[i++] + encodeURIComponent(target);
+    setTimeout(attemptNext, 800);
+  }
+  attemptNext();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const isInApp = detectInApp();
+  const interstitial = document.getElementById('interstitial');
+  const fallback = document.getElementById('fallback');
+  const openBtn = document.getElementById('open-btn');
+  const skipBtn = document.getElementById('skip-btn');
+
+  if(!isInApp){
+    window.location.replace(DESTINATION);
+    return;
+  }
+
+  interstitial.setAttribute('aria-hidden','false');
+
+  openBtn.addEventListener('click', e => {
+    e.preventDefault();
+    const ua = navigator.userAgent || '';
+
+    if(/Android/i.test(ua)){
+      const intentUrl = buildAndroidIntent(window.location.origin + DESTINATION);
+      window.location = intentUrl;
+      setTimeout(() => window.location.replace(DESTINATION), 900);
+      return;
     }
 
-    // اگر کاربر در مرورگر داخلی بود، تلاش می‌کنیم با استفاده از ترفند Intent اندروید، مرورگر پیش‌فرض را باز کنیم.
-    window.location.href = "intent://" + destinationURL.replace("https://", "") + "#Intent;scheme=https;end";
+    if(/iPhone|iPad|iPod/i.test(ua)){
+      tryIOSSchemes(window.location.origin + DESTINATION);
+      setTimeout(() => window.open(DESTINATION, '_blank', 'noopener'), 1100);
+      return;
+    }
 
-    // به عنوان یک راه‌حل جایگزین، یک تایمر تنظیم می‌کنیم.
-    // اگر ترفند Intent بعد از ۱.۵ ثانیه کار نکرد (مثلاً در iOS یا اپ‌های محدودکننده)،
-    // کاربر را به صورت عادی در همان مرورگر داخلی به مقصد هدایت می‌کنیم تا معطل نماند.
-    setTimeout(function() {
-        window.location.href = destinationURL;
-    }, 1500);
-})();
+    window.open(DESTINATION, '_blank', 'noopener');
+  });
+
+  skipBtn.addEventListener('click', () => {
+    interstitial.setAttribute('aria-hidden','true');
+    fallback.setAttribute('aria-hidden','false');
+    window.location.replace(DESTINATION);
+  });
+});
