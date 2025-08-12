@@ -1,29 +1,35 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-    <title>Hi Studios | اکوسیستم خلاق</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Hi Studios — باز کردن در مرورگر</title>
 
-    <meta name="theme-color" content="#111111">
-
-    <meta property="og:title" content="Hi Studios">
-    <meta property="og:description" content="اکوسیستم خلاق | خانه برند های Hi">
-    <meta property="og:image" content="https://histudios.ir/preview.jpg">
-    <meta property="og:url" content="https://histudios.ir">
-    <meta property="og:type" content="website">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta property="twitter:title" content="Hi Studios">
-    <meta property="twitter:description" content="اکوسیستم خلاق | خانه برند های Hi">
-    <meta property="twitter:image" content="https://histudios.ir/preview.jpg">
-   
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@latest/Vazirmatn-font-face.css">
-    
-    <link rel="stylesheet" href="style.css">
+  <meta name="theme-color" content="#111111">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@latest/Vazirmatn-font-face.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <p>در حال انتقال به سایت مورد نظر...</p>
+  <main class="page">
+    <section class="interstitial" id="interstitial" aria-hidden="true">
+      <div class="card">
+        <h1>برای تجربهٔ کامل، در مرورگر سیستم باز کنید</h1>
+        <p class="muted">این صفحه در داخل یک اپ باز شده — برای عملکرد بهتر روی «باز کردن در مرورگر» بزنید.</p>
 
-    <script src="script.js" defer></script> 
+        <div class="actions">
+          <button id="open-btn" class="btn primary">باز کردن در مرورگر</button>
+          <button id="skip-btn" class="btn ghost">ادامه در همین صفحه</button>
+        </div>
+
+        <p class="tip">اگر در آیفون هستید و مرورگری باز نشد: از منوی مرورگر داخلی گزینهٔ <strong>Open in Safari</strong> را انتخاب کنید.</p>
+      </div>
+    </section>
+
+    <section class="fallback" id="fallback" aria-hidden="true">
+      <p>در حال انتقال...</p>
+    </section>
+  </main>
+
+  <script src="script.js" defer></script>
 </body>
 </html>
