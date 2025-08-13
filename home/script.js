@@ -19,14 +19,14 @@ function openInExternalBrowser() {
 // All scripts run after the DOM is fully loaded to ensure elements are available
 document.addEventListener('DOMContentLoaded', () => {
 
-  // --- Modal Logic using inapp-spy library ---
-  // First, check if the InAppSpy library was loaded successfully
-  if (typeof InAppSpy === 'function') {
-    const spy = InAppSpy();
+  // --- Modal Logic using detect-inapp library ---
+  // First, check if the InApp library was loaded successfully
+  if (typeof InApp === 'function') {
+    const ia = new InApp(navigator.userAgent || window.navigator.vendor || window.opera);
     
     // If the library detects any in-app browser
-    if (spy.isInApp) {
-      console.log(`In-app browser detected: ${spy.appName || 'Unknown'}`); // For debugging
+    if (ia.isInApp) {
+      console.log(`In-app browser detected: ${ia.browser}`); // For debugging
       
       const modal = document.getElementById('inAppBrowserModal');
       const openBtn = document.getElementById('openInBrowserBtn');
