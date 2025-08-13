@@ -1,1 +1,15 @@
-/   /home/   302
+# Hi Studios - Cloudflare Pages Redirects
+# Redirect root to home directory (temporary redirect)
+/    /home/    302
+
+# Additional redirects for common URL variations (temporary)
+/index.html    /home/    302
+/index         /home/    302
+
+# Ensure trailing slash consistency (temporary)
+/home    /home/    302
+
+# Handle common variations (temporary)
+/fa      /home/    302
+/persian /home/    302
+/farsi   /home/    302
