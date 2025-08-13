@@ -205,15 +205,15 @@ body{
 /* --- START: بخش ویرایش شده برای رنگ دکمه --- */
 /* رنگ دکمه اصلی پاپ‌آپ در حالت روشن */
 .modal-button.primary {
-  background-color: #007AFF; /* رنگ پس‌زمینه آبی برای مثال */
-  color: #ffffff;             /* رنگ متن سفید */
+  background-color: #0c111d; /* رنگ پس‌زمینه آبی برای مثال */
+  color: #1d2939;             /* رنگ متن سفید */
   border-color: #007AFF;     /* رنگ حاشیه هماهنگ */
 }
 
 /* رنگ دکمه اصلی پاپ‌آپ در حالت تاریک */
 :root.dark .modal-button.primary {
-  background-color: #0A84FF; /* یک درجه آبی روشن‌تر برای کنتراست بهتر در تم تاریک */
-  color: #ffffff;
+  background-color: #f2f4f7; /* یک درجه آبی روشن‌تر برای کنتراست بهتر در تم تاریک */
+  color: #e5e7eb;
   border-color: #0A84FF;
 }
 /* --- END: بخش ویرایش شده --- */
