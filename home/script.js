@@ -1,44 +1,65 @@
-// کد نهایی و کامل برای فایل home/script.js
-
 (function(){
   'use strict';
 
-  // --- تابع تشخیص مرورگر داخلی (نسخه بهبود یافته) ---
+  // --- In-App Browser Utilities ---
   function detectInApp() {
     const ua = navigator.userAgent || "";
-    // لیست جامع‌تری از شناسه‌های مرورگرهای داخلی
-    const inAppTokens = /(FB_IAB|FB4A|FBAN|FBIOS|FBSS|trill|tango|snapchat|swiftkey|Pinterest|LINE|wv|WebView|Instagram|Telegram|Twitter)/i;
-    // برخی مرورگرهای داخلی در اندروید خود را مانند کروم جا می‌زنند اما کلمه "wv" را در گذشته داشتند
-    // یا ممکن است هیچ نشانه‌ای نداشته باشند. این یک مشکل شناخته‌شده است.
+    // First, check for Telegram's specific JS object, which is the most reliable method
+    if (window.Telegram && window.Telegram.WebApp) {
+      return true;
+    }
+    // Fallback to User Agent sniffing for other apps like Instagram
+    const inAppTokens = /(FBAN|FBAV|Instagram|WebView|wv)/i;
     return inAppTokens.test(ua);
   }
 
-  // اجرای تمام اسکریپت‌ها پس از بارگذاری کامل صفحه
+  function openInBrowser() {
+    const ua = navigator.userAgent || "";
+    const currentUrl = window.location.href;
+
+    // For Android, use a Chrome Intent to force opening in the external browser
+    if (/Android/i.test(ua)) {
+      const intentUrl = `intent://${currentUrl.substring(8)}#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=${encodeURIComponent(currentUrl)};end;`;
+      window.location.href = intentUrl;
+    } 
+    // For iOS and other OS, there's no reliable way to force open the browser.
+    // The pop-up text will guide the user.
+    else {
+      // You can optionally try window.open as a last resort, but it might open in the same webview
+      // window.open(currentUrl, '_blank'); 
+      alert("برای باز کردن در مرورگر، لطفاً از منوی اشتراک‌گذاری یا تنظیمات مرورگر داخلی، گزینه 'Open in Safari' یا 'Open in Browser' را انتخاب کنید.");
+    }
+  }
+
+  // Run all scripts after the document is fully loaded
   document.addEventListener('DOMContentLoaded', () => {
 
-    // --- منطق نمایش پاپ‌آپ ---
+    // --- Modal Logic ---
     if (detectInApp()) {
       const modal = document.getElementById('inAppBrowserModal');
-      const closeBtn = document.getElementById('closeModalBtn');
-
-      if (modal && closeBtn) {
+      const openBtn = document.getElementById('openInBrowserBtn');
+      const continueBtn = document.getElementById('continueInAppBtn');
+      
+      if (modal && openBtn && continueBtn) {
         modal.style.display = 'flex';
         setTimeout(() => {
             modal.classList.add('visible');
             modal.setAttribute('aria-hidden', 'false');
-        }, 20);
+        }, 50); // Small delay to ensure transition triggers
 
-        closeBtn.addEventListener('click', () => {
+        openBtn.addEventListener('click', openInBrowser);
+
+        continueBtn.addEventListener('click', () => {
           modal.classList.remove('visible');
           modal.setAttribute('aria-hidden', 'true');
           setTimeout(() => {
               modal.style.display = 'none';
-          }, 300);
+          }, 350); // Match CSS transition duration
         });
       }
     }
 
-    // --- کدهای اصلی شما برای تم و انیمیشن‌ها ---
+    // --- Original Theme & Ripple Logic ---
 
     // 1. Element Definitions
     const root = document.documentElement;
@@ -66,7 +87,7 @@
     }
 
     // 3. Animation Logic
-    function createRipple(button, event) {.
+    function createRipple(button, event) {
       const ripple = document.createElement("span");
       const diameter = Math.max(button.clientWidth, button.clientHeight);
       const radius = diameter / 2;
@@ -110,7 +131,6 @@
     const initialIsDark = storedTheme ? storedTheme === 'dark' : prefersDark;
     applyTheme(initialIsDark);
 
-  });
+  }); // End of DOMContentLoaded
 
 })();
- 
