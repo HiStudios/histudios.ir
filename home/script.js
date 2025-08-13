@@ -1,154 +1,174 @@
-// --- Start of home/script.js ---
+/**
+ * Hi Studios - Optimized JavaScript
+ * =====================================
+ * Modern, clean, and performant implementation
+ */
+
+'use strict';
 
 /**
- * A custom function to detect in-app browsers using modern techniques.
- * It combines direct object checking for Telegram with User Agent sniffing for others.
- * @returns {boolean}
+ * Configuration object for application settings
  */
-function isRunningInApp() {
-  // 1. The most reliable method for Telegram: Check for its specific global object.
-  if (window.Telegram && window.Telegram.WebApp) {
-    console.log("Detection Method: Telegram WebApp Object");
-    return true;
+const CONFIG = {
+  STORAGE_KEYS: {
+    THEME: 'hi:theme'
+  },
+  THEMES: {
+    LIGHT: 'light',
+    DARK: 'dark'
+  },
+  COLORS: {
+    LIGHT: '#f2f4f7',
+    DARK: '#0c111d'
+  },
+  ANIMATION: {
+    MODAL_DELAY: 50,
+    MODAL_TRANSITION: 450,
+    RIPPLE_DURATION: 500
   }
-
-  const ua = navigator.userAgent || "";
-
-  // 2. Fallback to User Agent sniffing for other major apps like Instagram, Facebook, etc.
-  const inAppTokens = [
-    'FBAN', 'FBAV', // Facebook
-    'Instagram',    // Instagram
-    'WebView',      // General Android WebView
-    '(wv)',         // Another Android WebView indicator
-    'Twitter',
-    'WhatsApp',
-    'WeChat'
-  ];
-
-  if (inAppTokens.some(token => ua.includes(token))) {
-    console.log("Detection Method: User Agent Token");
-    return true;
-  }
-
-  // If no specific signs are found, assume it's a standard browser.
-  console.log("No specific in-app browser detected.");
-  return false;
-}
-
+};
 
 /**
- * Attempts to open the current URL in an external browser.
+ * Utility functions
  */
-function openInExternalBrowser() {
-  const ua = navigator.userAgent || "";
-  const currentUrl = window.location.href;
+const Utils = {
+  /**
+   * Safely gets a value from localStorage
+   * @param {string} key - The storage key
+   * @returns {string|null} The stored value or null
+   */
+  getStorageItem(key) {
+    try {
+      return localStorage.getItem(key);
+    } catch (error) {
+      console.warn(`Failed to read from localStorage: ${error.message}`);
+      return null;
+    }
+  },
 
-  // For Android, use a Chrome Intent for a reliable result
-  if (/Android/i.test(ua)) {
-    const intentUrl = `intent://${currentUrl.substring(8)}#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=${encodeURIComponent(currentUrl)};end;`;
-    window.location.href = intentUrl;
-  } 
-  // For iOS, a direct command is not available, so we guide the user
-  else {
-    alert("در آیفون، لطفاً از منوی اشتراک‌گذاری (Share) گزینه 'Open in Safari' را انتخاب کنید.");
+  /**
+   * Safely sets a value in localStorage
+   * @param {string} key - The storage key
+   * @param {string} value - The value to store
+   */
+  setStorageItem(key, value) {
+    try {
+      localStorage.setItem(key, value);
+    } catch (error) {
+      console.warn(`Failed to write to localStorage: ${error.message}`);
+    }
+  },
+
+  /**
+   * Checks if device prefers dark color scheme
+   * @returns {boolean} True if dark mode is preferred
+   */
+  prefersDarkScheme() {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  },
+
+  /**
+   * Debounces a function call
+   * @param {Function} func - Function to debounce
+   * @param {number} wait - Wait time in milliseconds
+   * @returns {Function} Debounced function
+   */
+  debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+      const later = () => {
+        clearTimeout(timeout);
+        func(...args);
+      };
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
   }
-}
+};
 
-// All scripts run after the DOM is fully loaded to ensure elements are available
-document.addEventListener('DOMContentLoaded', () => {
+/**
+ * In-app browser detection module
+ */
+const InAppDetector = {
+  /**
+   * Detects if the application is running inside an in-app browser
+   * @returns {boolean} True if running in an in-app browser
+   */
+  isRunningInApp() {
+    // Primary detection: Check for Telegram WebApp object
+    if (window.Telegram?.WebApp) {
+      console.log('Detection Method: Telegram WebApp Object');
+      return true;
+    }
 
-  // --- Modal Logic using our custom detection function ---
-  if (isRunningInApp()) {
-    const modal = document.getElementById('inAppBrowserModal');
-    const openBtn = document.getElementById('openInBrowserBtn');
-    const continueBtn = document.getElementById('continueInAppBtn');
+    // Secondary detection: User Agent analysis
+    const userAgent = navigator.userAgent || '';
+    const inAppTokens = [
+      'FBAN', 'FBAV',    // Facebook
+      'Instagram',       // Instagram
+      'WebView',         // Android WebView
+      '(wv)',           // Android WebView indicator
+      'Twitter',         // Twitter
+      'WhatsApp',        // WhatsApp
+      'WeChat'          // WeChat
+    ];
+
+    const isInApp = inAppTokens.some(token => userAgent.includes(token));
     
-    if (modal && openBtn && continueBtn) {
-      // Show the modal with a smooth animation
-      modal.style.display = 'flex';
-      setTimeout(() => {
-          modal.classList.add('visible');
-          modal.setAttribute('aria-hidden', 'false');
-      }, 50);
+    if (isInApp) {
+      console.log('Detection Method: User Agent Analysis');
+      return true;
+    }
 
-      // Assign actions to the modal buttons
-      openBtn.addEventListener('click', openInExternalBrowser);
-      continueBtn.addEventListener('click', () => {
-        modal.classList.remove('visible');
-        modal.setAttribute('aria-hidden', 'true');
-        setTimeout(() => {
-            modal.style.display = 'none';
-        }, 450); // Match CSS transition duration
-      });
+    console.log('Standard browser detected');
+    return false;
+  },
+
+  /**
+   * Attempts to open current URL in external browser
+   */
+  openInExternalBrowser() {
+    const userAgent = navigator.userAgent || '';
+    const currentUrl = window.location.href;
+
+    if (/Android/i.test(userAgent)) {
+      // Android: Use Chrome intent with fallback
+      const baseUrl = currentUrl.substring(8); // Remove 'https://'
+      const intentUrl = `intent://${baseUrl}#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=${encodeURIComponent(currentUrl)};end;`;
+      
+      try {
+        window.location.href = intentUrl;
+      } catch (error) {
+        console.warn('Failed to open in external browser:', error);
+        // Fallback: Try direct URL
+        window.open(currentUrl, '_blank');
+      }
+    } else {
+      // iOS and other platforms
+      this.showBrowserGuidance();
+    }
+  },
+
+  /**
+   * Shows guidance for opening in external browser on iOS
+   */
+  showBrowserGuidance() {
+    const message = 'در آیفون، لطفاً از منوی اشتراک‌گذاری (Share) گزینه "Open in Safari" را انتخاب کنید.';
+    
+    // Try to use a more user-friendly notification if available
+    if ('Notification' in window && Notification.permission === 'granted') {
+      new Notification('Hi Studios', { body: message, icon: '/favicon.ico' });
+    } else {
+      alert(message);
     }
   }
+};
 
-  // --- Theme & UI Logic ---
-  
-  // 1. Element Definitions
-  const root = document.documentElement;
-  const themeBtn = document.getElementById('themeBtn');
-  const themeIconSun = document.getElementById('themeIconSun');
-  const themeIconMoon = document.getElementById('themeIconMoon');
-  const themeMeta = document.querySelector('meta[name="theme-color"]');
-  
-  const lightThemeColor = '#f2f4f7';
-  const darkThemeColor = '#0c111d';
+/**
+ * Modal management module
+ */
+const ModalManager = {
+  elements: {},
 
-  // 2. Core function to apply the theme
-  function applyTheme(isDark) {
-    root.classList.toggle('dark', isDark);
-    if (themeMeta) {
-      themeMeta.setAttribute('content', isDark ? darkThemeColor : lightThemeColor);
-    }
-    if (themeIconSun && themeIconMoon) {
-      themeIconSun.style.display = isDark ? 'none' : 'inline-block';
-      themeIconMoon.style.display = isDark ? 'inline-block' : 'none';
-    }
-  }
-
-  // 3. Ripple effect for buttons
-  function createRipple(button, event) {
-    const ripple = document.createElement("span");
-    const diameter = Math.max(button.clientWidth, button.clientHeight);
-    const radius = diameter / 2;
-    
-    ripple.style.width = ripple.style.height = `${diameter}px`;
-    ripple.style.left = `${event.clientX - button.getBoundingClientRect().left - radius}px`;
-    ripple.style.top = `${event.clientY - button.getBoundingClientRect().top - radius}px`;
-    ripple.classList.add("ripple");
-    
-    const existingRipple = button.querySelector(".ripple");
-    if(existingRipple) existingRipple.remove();
-    
-    button.appendChild(ripple);
-  }
-
-  // 4. Event Listeners
-  if (themeBtn) {
-    themeBtn.addEventListener('click', () => {
-      const isDark = !root.classList.contains('dark');
-      localStorage.setItem('hi:theme', isDark ? 'dark' : 'light');
-      applyTheme(isDark);
-    });
-  }
-
-  // Sync with browser/OS theme changes if no preference is saved
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-    if (!localStorage.getItem('hi:theme')) {
-      applyTheme(e.matches);
-    }
-  });
-
-  // Attach ripple effect to all relevant buttons
-  const rippleButtons = document.querySelectorAll('.toggle-btn, .social');
-  rippleButtons.forEach(button => {
-    button.addEventListener('click', (e) => {
-      createRipple(button, e);
-    });
-  });
-
-  // 5. Correctly set the initial state of the theme toggle icon
-  applyTheme(root.classList.contains('dark'));
-
-}); // End of DOMContentLoaded
+  /**
+   *
