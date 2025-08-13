@@ -1,6 +1,44 @@
 // --- Start of home/script.js ---
 
-// A function to attempt opening the current URL in an external browser
+/**
+ * A custom function to detect in-app browsers using modern techniques.
+ * It combines direct object checking for Telegram with User Agent sniffing for others.
+ * @returns {boolean}
+ */
+function isRunningInApp() {
+  // 1. The most reliable method for Telegram: Check for its specific global object.
+  if (window.Telegram && window.Telegram.WebApp) {
+    console.log("Detection Method: Telegram WebApp Object");
+    return true;
+  }
+
+  const ua = navigator.userAgent || "";
+
+  // 2. Fallback to User Agent sniffing for other major apps like Instagram, Facebook, etc.
+  const inAppTokens = [
+    'FBAN', 'FBAV', // Facebook
+    'Instagram',    // Instagram
+    'WebView',      // General Android WebView
+    '(wv)',         // Another Android WebView indicator
+    'Twitter',
+    'WhatsApp',
+    'WeChat'
+  ];
+
+  if (inAppTokens.some(token => ua.includes(token))) {
+    console.log("Detection Method: User Agent Token");
+    return true;
+  }
+
+  // If no specific signs are found, assume it's a standard browser.
+  console.log("No specific in-app browser detected.");
+  return false;
+}
+
+
+/**
+ * Attempts to open the current URL in an external browser.
+ */
 function openInExternalBrowser() {
   const ua = navigator.userAgent || "";
   const currentUrl = window.location.href;
@@ -19,37 +57,29 @@ function openInExternalBrowser() {
 // All scripts run after the DOM is fully loaded to ensure elements are available
 document.addEventListener('DOMContentLoaded', () => {
 
-  // --- Modal Logic using detect-inapp library ---
-  // First, check if the InApp library was loaded successfully
-  if (typeof InApp === 'function') {
-    const ia = new InApp(navigator.userAgent || window.navigator.vendor || window.opera);
+  // --- Modal Logic using our custom detection function ---
+  if (isRunningInApp()) {
+    const modal = document.getElementById('inAppBrowserModal');
+    const openBtn = document.getElementById('openInBrowserBtn');
+    const continueBtn = document.getElementById('continueInAppBtn');
     
-    // If the library detects any in-app browser
-    if (ia.isInApp) {
-      console.log(`In-app browser detected: ${ia.browser}`); // For debugging
-      
-      const modal = document.getElementById('inAppBrowserModal');
-      const openBtn = document.getElementById('openInBrowserBtn');
-      const continueBtn = document.getElementById('continueInAppBtn');
-      
-      if (modal && openBtn && continueBtn) {
-        // Show the modal with a smooth animation
-        modal.style.display = 'flex';
-        setTimeout(() => {
-            modal.classList.add('visible');
-            modal.setAttribute('aria-hidden', 'false');
-        }, 50);
+    if (modal && openBtn && continueBtn) {
+      // Show the modal with a smooth animation
+      modal.style.display = 'flex';
+      setTimeout(() => {
+          modal.classList.add('visible');
+          modal.setAttribute('aria-hidden', 'false');
+      }, 50);
 
-        // Assign actions to the modal buttons
-        openBtn.addEventListener('click', openInExternalBrowser);
-        continueBtn.addEventListener('click', () => {
-          modal.classList.remove('visible');
-          modal.setAttribute('aria-hidden', 'true');
-          setTimeout(() => {
-              modal.style.display = 'none';
-          }, 450); // Match CSS transition duration
-        });
-      }
+      // Assign actions to the modal buttons
+      openBtn.addEventListener('click', openInExternalBrowser);
+      continueBtn.addEventListener('click', () => {
+        modal.classList.remove('visible');
+        modal.setAttribute('aria-hidden', 'true');
+        setTimeout(() => {
+            modal.style.display = 'none';
+        }, 450); // Match CSS transition duration
+      });
     }
   }
 
@@ -119,7 +149,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // 5. Correctly set the initial state of the theme toggle icon
-  // The theme itself is already set by the inline script in <head>
   applyTheme(root.classList.contains('dark'));
 
 }); // End of DOMContentLoaded
