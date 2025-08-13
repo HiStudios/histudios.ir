@@ -2,24 +2,6 @@
   'use strict';
 
   /**
-   * Tries to detect if the page is loaded inside an in-app browser.
-   * This is not 100% reliable as some apps disguise their user agent.
-   * @returns {boolean}
-   */
-  function isRunningInApp() {
-    const ua = navigator.userAgent || "";
-    
-    // Most reliable check for Telegram Web App environment
-    if (window.Telegram && window.Telegram.WebApp) {
-      return true;
-    }
-
-    // Fallback to User Agent sniffing for other apps like Instagram, etc.
-    const inAppTokens = /(FBAN|FBAV|Instagram|WebView|wv)/i;
-    return inAppTokens.test(ua);
-  }
-
-  /**
    * Attempts to open the current URL in an external browser.
    * Works reliably on Android; shows guidance on iOS.
    */
@@ -29,48 +11,52 @@
 
     // For Android, use a Chrome Intent to force opening in the external browser
     if (/Android/i.test(ua)) {
-      // This special URL format tells Android to open the link in Chrome
-      // If Chrome is not available, it will fall back to the original URL
       const intentUrl = `intent://${currentUrl.substring(8)}#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=${encodeURIComponent(currentUrl)};end;`;
       window.location.href = intentUrl;
     } 
     // For iOS and others, a direct "open in browser" command is not reliably available
     else {
-      alert("برای باز کردن در مرورگر، لطفاً از منوی اشتراک‌گذاری یا تنظیمات مرورگر داخلی، گزینه 'Open in Safari' یا 'Open in Browser' را انتخاب کنید.");
+      alert("در آیفون، لطفاً از منوی اشتراک‌گذاری (Share) گزینه 'Open in Safari' را انتخاب کنید.");
     }
   }
 
   // Run all scripts after the document is fully loaded
   document.addEventListener('DOMContentLoaded', () => {
 
-    // --- Modal Logic ---
-    // Check if we are in an in-app browser
-    if (isRunningInApp()) {
-      const modal = document.getElementById('inAppBrowserModal');
-      const openBtn = document.getElementById('openInBrowserBtn');
-      const continueBtn = document.getElementById('continueInAppBtn');
-      
-      // Ensure all required elements exist
-      if (modal && openBtn && continueBtn) {
+    // --- Modal Logic using inapp-spy library ---
+    // Check if the InAppSpy library is loaded
+    if (typeof InAppSpy === 'function') {
+      const spy = InAppSpy();
+      // Check if we are in any in-app browser
+      if (spy.isInApp) {
+        console.log(`In-app browser detected: ${spy.appName}`); // For debugging
         
-        // Show the modal with a smooth animation
-        modal.style.display = 'flex';
-        setTimeout(() => {
-            modal.classList.add('visible');
-            modal.setAttribute('aria-hidden', 'false');
-        }, 50); // Small delay to ensure CSS transition triggers
-
-        // Add event listeners for the buttons
-        openBtn.addEventListener('click', openInExternalBrowser);
-
-        continueBtn.addEventListener('click', () => {
-          modal.classList.remove('visible');
-          modal.setAttribute('aria-hidden', 'true');
-          // Wait for animation to finish before hiding the element completely
+        const modal = document.getElementById('inAppBrowserModal');
+        const openBtn = document.getElementById('openInBrowserBtn');
+        const continueBtn = document.getElementById('continueInAppBtn');
+        
+        // Ensure all required modal elements exist
+        if (modal && openBtn && continueBtn) {
+          
+          // Show the modal with a smooth animation
+          modal.style.display = 'flex';
           setTimeout(() => {
-              modal.style.display = 'none';
-          }, 400); // Should match CSS transition duration
-        });
+              modal.classList.add('visible');
+              modal.setAttribute('aria-hidden', 'false');
+          }, 50);
+
+          // Add event listeners for the buttons
+          openBtn.addEventListener('click', openInExternalBrowser);
+
+          continueBtn.addEventListener('click', () => {
+            modal.classList.remove('visible');
+            modal.setAttribute('aria-hidden', 'true');
+            // Wait for animation to finish before hiding the element
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 450); // Match CSS transition duration
+          });
+        }
       }
     }
 
@@ -81,7 +67,7 @@
     const themeBtn = document.getElementById('themeBtn');
     const themeIconSun = document.getElementById('themeIconSun');
     const themeIconMoon = document.getElementById('themeIconMoon');
-    const themeMeta = document.getElementById('theme-color-meta');
+    const themeMeta = document.querySelector('meta[name="theme-color"]');
     
     const lightThemeColor = '#f2f4f7';
     const darkThemeColor = '#0c111d';
@@ -127,6 +113,7 @@
       });
     }
 
+    // Sync with browser/OS theme changes if no preference is saved
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
       if (!localStorage.getItem('hi:theme')) {
         applyTheme(e.matches);
@@ -141,6 +128,7 @@
     });
 
     // 5. Initial Load
+    // Set theme on initial page load based on saved preference or browser/OS setting
     const storedTheme = localStorage.getItem('hi:theme');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     const initialIsDark = storedTheme ? storedTheme === 'dark' : prefersDark;
