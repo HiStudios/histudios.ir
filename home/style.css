@@ -204,15 +204,26 @@ body{
   font-size: 15px;
   transition: all 0.2s ease;
 }
-.modal-button.primary {
-  background-color: var(--text);
-  color: var(--bg);
-  border-color: var(--text);
-}
 .modal-button:hover {
   transform: translateY(-2px);
   box-shadow: var(--button-shadow-hover);
 }
+
+/* --- START: بخش ویرایش شده برای رنگ متن دکمه --- */
+/* رنگ دکمه اصلی پاپ‌آپ در حالت روشن */
+.modal-button.primary {
+  background-color: var(--text); /* پس‌زمینه دکمه (سرمه‌ای) */
+  border-color: var(--text);     /* حاشیه دکمه (سرمه‌ای) */
+  color: #FFFFFF;                /* <<< اینجا رنگ متن را برای حالت روشن تغییر دهید */
+}
+
+/* رنگ دکمه اصلی پاپ‌آپ در حالت تاریک */
+:root.dark .modal-button.primary {
+  background-color: var(--text); /* پس‌زمینه دکمه (سفید) */
+  border-color: var(--text);     /* حاشیه دکمه (سفید) */
+  color: #1d2939;                /* <<< اینجا رنگ متن را برای حالت تاریک تغییر دهید */
+}
+/* --- END: بخش ویرایش شده --- */
 
 /* --- Responsive --- */
 @media (max-width:520px){
