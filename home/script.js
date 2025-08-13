@@ -54,7 +54,7 @@
             // Wait for animation to finish before hiding the element
             setTimeout(() => {
                 modal.style.display = 'none';
-            }, 450); // Match CSS transition duration
+            }, 450); // Should match CSS transition duration
           });
         }
       }
@@ -72,7 +72,7 @@
     const lightThemeColor = '#f2f4f7';
     const darkThemeColor = '#0c111d';
 
-    // 2. Core Functions
+    // 2. Core Functions for theme switching
     function applyTheme(isDark) {
       if (isDark) {
         root.classList.add('dark');
@@ -87,7 +87,7 @@
       }
     }
 
-    // 3. Animation Logic
+    // 3. Animation Logic for ripple effect
     function createRipple(button, event) {
       const ripple = document.createElement("span");
       const diameter = Math.max(button.clientWidth, button.clientHeight);
@@ -104,7 +104,7 @@
       button.appendChild(ripple);
     }
 
-    // 4. Event Listeners
+    // 4. Event Listeners for theme and ripples
     if (themeBtn) {
       themeBtn.addEventListener('click', () => {
         const isDark = !root.classList.contains('dark');
@@ -127,12 +127,13 @@
       });
     });
 
-    // 5. Initial Load
-    // Set theme on initial page load based on saved preference or browser/OS setting
-    const storedTheme = localStorage.getItem('hi:theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const initialIsDark = storedTheme ? storedTheme === 'dark' : prefersDark;
-    applyTheme(initialIsDark);
+    // The initial theme is now set by the inline script in the <head>.
+    // We just need to make sure the toggle button icon is correct on load.
+    const isCurrentlyDark = document.documentElement.classList.contains('dark');
+    if (themeIconSun && themeIconMoon) {
+        themeIconSun.style.display = isCurrentlyDark ? 'none' : 'inline-block';
+        themeIconMoon.style.display = isCurrentlyDark ? 'inline-block' : 'none';
+    }
 
   }); // End of DOMContentLoaded
 
