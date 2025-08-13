@@ -1,32 +1,41 @@
 (function(){
   'use strict';
 
-  // --- In-App Browser Utilities ---
-  function detectInApp() {
+  /**
+   * Tries to detect if the page is loaded inside an in-app browser.
+   * This is not 100% reliable as some apps disguise their user agent.
+   * @returns {boolean}
+   */
+  function isRunningInApp() {
     const ua = navigator.userAgent || "";
-    // First, check for Telegram's specific JS object, which is the most reliable method
+    
+    // Most reliable check for Telegram Web App environment
     if (window.Telegram && window.Telegram.WebApp) {
       return true;
     }
-    // Fallback to User Agent sniffing for other apps like Instagram
+
+    // Fallback to User Agent sniffing for other apps like Instagram, etc.
     const inAppTokens = /(FBAN|FBAV|Instagram|WebView|wv)/i;
     return inAppTokens.test(ua);
   }
 
-  function openInBrowser() {
+  /**
+   * Attempts to open the current URL in an external browser.
+   * Works reliably on Android; shows guidance on iOS.
+   */
+  function openInExternalBrowser() {
     const ua = navigator.userAgent || "";
     const currentUrl = window.location.href;
 
     // For Android, use a Chrome Intent to force opening in the external browser
     if (/Android/i.test(ua)) {
+      // This special URL format tells Android to open the link in Chrome
+      // If Chrome is not available, it will fall back to the original URL
       const intentUrl = `intent://${currentUrl.substring(8)}#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=${encodeURIComponent(currentUrl)};end;`;
       window.location.href = intentUrl;
     } 
-    // For iOS and other OS, there's no reliable way to force open the browser.
-    // The pop-up text will guide the user.
+    // For iOS and others, a direct "open in browser" command is not reliably available
     else {
-      // You can optionally try window.open as a last resort, but it might open in the same webview
-      // window.open(currentUrl, '_blank'); 
       alert("برای باز کردن در مرورگر، لطفاً از منوی اشتراک‌گذاری یا تنظیمات مرورگر داخلی، گزینه 'Open in Safari' یا 'Open in Browser' را انتخاب کنید.");
     }
   }
@@ -35,26 +44,32 @@
   document.addEventListener('DOMContentLoaded', () => {
 
     // --- Modal Logic ---
-    if (detectInApp()) {
+    // Check if we are in an in-app browser
+    if (isRunningInApp()) {
       const modal = document.getElementById('inAppBrowserModal');
       const openBtn = document.getElementById('openInBrowserBtn');
       const continueBtn = document.getElementById('continueInAppBtn');
       
+      // Ensure all required elements exist
       if (modal && openBtn && continueBtn) {
+        
+        // Show the modal with a smooth animation
         modal.style.display = 'flex';
         setTimeout(() => {
             modal.classList.add('visible');
             modal.setAttribute('aria-hidden', 'false');
-        }, 50); // Small delay to ensure transition triggers
+        }, 50); // Small delay to ensure CSS transition triggers
 
-        openBtn.addEventListener('click', openInBrowser);
+        // Add event listeners for the buttons
+        openBtn.addEventListener('click', openInExternalBrowser);
 
         continueBtn.addEventListener('click', () => {
           modal.classList.remove('visible');
           modal.setAttribute('aria-hidden', 'true');
+          // Wait for animation to finish before hiding the element completely
           setTimeout(() => {
               modal.style.display = 'none';
-          }, 350); // Match CSS transition duration
+          }, 400); // Should match CSS transition duration
         });
       }
     }
