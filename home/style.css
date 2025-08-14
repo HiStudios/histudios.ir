@@ -42,6 +42,14 @@ body {
     padding-bottom: 80px; 
 }
 
+/* --- Main Content Container --- */
+.container {
+    width: 90%; /* محتوا 90% عرض صفحه رو اشغال می‌کنه */
+    max-width: 1200px; /* یک عرض حداکثر برای نمایش در دسکتاپ */
+    margin-left: auto; 
+    margin-right: auto;
+}
+
 /* --- Mobile Navigation Bar --- */
 .mobile-nav {
     /* --- موقعیت‌یابی --- */
