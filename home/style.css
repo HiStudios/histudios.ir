@@ -19,5 +19,56 @@
 /* --- Borders --- */
 --border-radius-md: 16px;
 --border-radius-lg: 24px;
+}
 
+/* --- Base & Reset Styles --- */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
 
+html {
+    font-size: 16px; /* تعریف اندازه فونت پایه برای واحد rem */
+}
+
+body {
+    margin: 0;
+    background-color: var(--c-background);
+    color: var(--c-text);
+    font-family: 'Vazirmatn', sans-serif;
+    
+    /* یک فضای امن در پایین صفحه برای اینکه محتوا زیر نوار ناوبری پنهان نشه */
+    padding-bottom: 80px; 
+}
+
+/* --- Mobile Navigation Bar --- */
+.mobile-nav {
+    /* --- موقعیت‌یابی --- */
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+
+    /* --- چیدمان داخلی --- */
+    display: flex;
+    justify-content: space-around;
+
+    /* --- ظاهر و اندازه --- */
+    padding: var(--spacing-sm) 0; /* 8px فاصله داخلی بالا و پایین */
+    background-color: var(--c-nav);
+    border-top: 1px solid var(--c-border);
+}
+
+.mobile-nav a {
+    color: var(--c-text);
+    text-decoration: none;
+    font-size: 14px;
+    
+    /* این سه خط برای وقتی هست که بعدا آیکن اضافه کردی */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px; /* فاصله بین آیکن و متن */
+}
