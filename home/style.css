@@ -1,56 +1,235 @@
-@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;700&display=swap');
-
-.font-vazirmatn {
-  font-family: 'Vazirmatn', sans-serif;
+/* --- Variables --- */
+:root{
+  --bg: #f2f4f7;
+  --card: #ffffff;
+  --text: #1d2939;
+  --muted: #667085;
+  --glass: rgba(255,255,255,0.5);
+  --shadow: 0 10px 30px rgba(17, 24, 39, 0.05);
+  --radius: 14px;
+  --ripple-color: rgba(0, 0, 0, 0.1);
+  --button-shadow: 0 2px 5px rgba(0,0,0,0.06);
+  --button-shadow-hover: 0 6px 12px rgba(0,0,0,0.1);
+  --button-border-color: rgba(0,0,0,0.07);
+}
+:root.dark{
+  --bg: #0c111d;
+  --card: #161b29;
+  --text: #e5e7eb;
+  --muted: #909db0;
+  --glass: rgba(255,255,255,0.04);
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  --ripple-color: rgba(255, 255, 255, 0.15);
+  --button-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  --button-shadow-hover: 0 6px 12px rgba(0,0,0,0.3);
+  --button-border-color: rgba(255,255,255,0.1);
 }
 
-/* Glassmorphism bottom nav */
-.glass-nav {
-  background: rgba(255, 255, 255, 0.25);
-  backdrop-filter: blur(16px) saturate(150%);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-}
-.dark .glass-nav {
-  background: rgba(30, 30, 30, 0.4);
-  border: 1px solid rgba(255,255,255,0.1);
+/* --- Base & Reset --- */
+*{box-sizing:border-box}
+html,body{height:100%}
+* { -webkit-tap-highlight-color: transparent; }
+body{
+  margin:0;
+  font-family: 'Vazirmatn', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  background:var(--bg);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:40px 20px 40px;
+  transition:background .35s ease, color .35s ease;
 }
 
-/* Bottom nav items */
-.nav-item {
-  flex: 1;
+/* --- Layout --- */
+.container{ width:100%; max-width:880px; text-align:center; }
+.topbar{ margin-bottom:22px; }
+.card{
+  position:relative; 
+  background:var(--card);
+  border: 1px solid var(--button-border-color); 
+  border-radius:var(--radius); 
+  padding:36px; 
+  box-shadow:var(--shadow);
+}
+.site-footer{ margin-top:20px; color:var(--muted); font-size:13px; text-align:center; }
+
+/* --- Components --- */
+.logo{ font-size:48px; font-weight:700; letter-spacing:0.6px; margin:0; padding:0; }
+.subtext{ margin-top:8px; color:var(--muted); font-size:14px; line-height:1.8; }
+.theme-toggle{ position:absolute; right:16px; top:16px; }
+
+.toggle-btn, .social {
+  display:inline-flex; 
+  align-items:center; 
+  justify-content:center;
+  position:relative; 
+  overflow:hidden;
+  border: 1px solid var(--button-border-color);
+  background:var(--card);
+  box-shadow: var(--button-shadow);
+  color:var(--text);
+  cursor:pointer; 
+  text-decoration:none;
+  -webkit-appearance:none;
+  transition: all .2s ease-in-out;
+}
+.toggle-btn { width:52px; height:52px; border-radius:50%; background:linear-gradient(135deg,var(--card),var(--glass)); }
+.social { width:54px; height:54px; border-radius: 50%; }
+.socials{ display:flex; gap:14px; justify-content:center; margin-top:24px; }
+.social svg, .toggle-btn svg { width:22px; height:22px; z-index: 1; }
+
+.founder-section {
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    gap: 8px; 
+    margin-top: 16px; 
+    color: var(--muted); 
+    font-size: 14px;
+}
+.founder-link {
+    color: var(--text);
+    font-weight: 600;
+    text-decoration: none;
+    transition: color .2s ease;
+}
+
+/* --- Animations & Interactions --- */
+.ripple {
+    position: absolute; 
+    border-radius: 50%; 
+    background-color: var(--ripple-color);
+    transform: scale(0); 
+    animation: ripple-effect 0.5s ease-out; 
+    pointer-events: none;
+}
+@keyframes ripple-effect { to { transform: scale(4); opacity: 0; } }
+
+.toggle-btn:focus-visible, .social:focus-visible { outline: 2px solid var(--muted); outline-offset: 2px; }
+.toggle-btn:focus:not(:focus-visible),.social:focus:not(:focus-visible) { outline: none; }
+
+@media (hover: hover) and (pointer: fine) {
+  .toggle-btn:hover, .social:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--button-shadow-hover);
+  }
+  .founder-link:hover {
+      color: var(--muted);
+  }
+}
+
+/* --- Theme Icons --- */
+#moon { display: none; }
+.dark #sun { display: none; }
+.dark #moon { display: inline-block; }
+
+/* --- In-App Browser Modal (Final Polished Version) --- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.modal-overlay.visible {
+  opacity: 1;
+  visibility: visible;
+}
+.modal-card {
+  background-color: var(--card);
+  color: var(--text);
+  padding: 24px;
+  border-radius: var(--radius);
+  box-shadow: 0 -10px 60px rgba(0, 0, 0, 0.2);
+  max-width: 480px;
+  width: 100%;
   text-align: center;
-  color: inherit;
-  font-size: 0.9rem;
-  font-weight: 500;
-  transition: color 0.3s ease;
+  direction: rtl;
+  border: 1px solid var(--button-border-color);
+  transform: translateY(30px);
+  opacity: 0;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.nav-item.active {
-  color: #2563eb;
+.modal-overlay.visible .modal-card {
+  transform: translateY(0);
+  opacity: 1;
 }
-.nav-item:hover {
-  color: #2563eb;
-}
-
-/* Preloader animation */
-.loader {
-  border: 6px solid #ccc;
-  border-top: 6px solid #2563eb;
+.modal-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
   border-radius: 50%;
-  width: 60px;
-  height: 60px;
-  animation: spin 1s linear infinite;
+  color: var(--muted);
 }
-@keyframes spin {
-  to { transform: rotate(360deg); }
+.modal-card h2 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-size: 20px;
+  font-weight: 800;
+}
+.modal-text {
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--muted);
+  margin-bottom: 24px;
+}
+.modal-actions {
+  display: flex;
+  gap: 12px;
+}
+.modal-button {
+  flex-grow: 1;
+  border: 1px solid var(--button-border-color);
+  background-color: var(--card);
+  color: var(--text);
+  padding: 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 15px;
+  transition: all 0.2s ease;
+}
+.modal-button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--button-shadow-hover);
 }
 
-/* In-App modal animation */
-#inAppBrowserModal.visible {
-  display: flex !important;
-  animation: fadeIn 0.4s ease forwards;
+/* --- START: بخش ویرایش شده برای رنگ متن دکمه --- */
+/* رنگ دکمه اصلی پاپ‌آپ در حالت روشن */
+.modal-button.primary {
+  background-color: var(--text); /* پس‌زمینه دکمه (سرمه‌ای) */
+  border-color: var(--text);     /* حاشیه دکمه (سرمه‌ای) */
+  color: #FFFFFF;                /* <<< اینجا رنگ متن را برای حالت روشن تغییر دهید */
 }
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+
+/* رنگ دکمه اصلی پاپ‌آپ در حالت تاریک */
+:root.dark .modal-button.primary {
+  background-color: var(--text); /* پس‌زمینه دکمه (سفید) */
+  border-color: var(--text);     /* حاشیه دکمه (سفید) */
+  color: #1d2939;                /* <<< اینجا رنگ متن را برای حالت تاریک تغییر دهید */
+}
+/* --- END: بخش ویرایش شده --- */
+
+/* --- Responsive --- */
+@media (max-width:520px){
+  .logo{font-size:34px}
+  .toggle-btn{width:46px;height:46px}
+  .social{width:48px;height:48px}
+  .modal-card h2 {font-size: 18px;}
+  .modal-text {font-size: 13px;}
 }
