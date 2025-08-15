@@ -3,6 +3,8 @@
 :root{
 /* --- Default Theme: Dark --- */
 
+color-scheme: dark light;
+
 /* --- Colors --- */
 --c-primary-text: #ffffff;
 --c-text: #f2f2f2;
