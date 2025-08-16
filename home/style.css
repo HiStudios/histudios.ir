@@ -228,3 +228,50 @@ body {
         filter: blur(80px);
     }
 }
+
+/* --- Navigation Blob Effect --- */
+
+/* ۱. آماده‌سازی کانتینرهای نوار ناوبری */
+.mobile-nav, .desktop-nav .nav-container {
+    position: relative; /* برای اینکه حباب داخلشون قرار بگیره */
+    overflow: hidden;   /* برای اینکه لبه‌های گرد حباب بیرون نزنه */
+}
+
+/* ۲. استایل خود حباب */
+.nav-blob {
+    position: absolute;
+    z-index: -1; /* پشت آیکن‌ها و لینک‌ها قرار می‌گیره */
+    
+    /* این سه خط حباب رو دقیقاً در مرکز قرار می‌ده */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    width: 50px; /* عرض اولیه */
+    height: 10px; /* ارتفاع ثابت */
+
+    /* رنگ شیری نیمه‌شفاف */
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 999px; /* برای ایجاد شکل کپسولی/نیم‌دایره‌ای */
+
+    /* ۳. اتصال به انیمیشن */
+    animation-name: stretch_blob;
+    animation-duration: 5s;
+    animation-timing-function: ease-in-out;
+    animation-direction: alternate;
+    animation-iteration-count: infinite;
+}
+
+/* ۴. تعریف انیمیشن کش آمدن */
+@keyframes stretch_blob {
+    /* حالت جمع شده (اولیه) */
+    from {
+        width: 50px;
+        opacity: 0.7;
+    }
+    /* حالت کش آمده (نهایی) */
+    to {
+        width: 100%;
+        opacity: 1;
+    }
+}
