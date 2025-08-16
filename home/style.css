@@ -136,7 +136,7 @@ body {
   }
 }
 
-/* --- Fast & Dynamic Aurora Background --- */
+/* --- Contained & Dynamic Aurora Background --- */
 .aurora-background {
     position: fixed;
     top: 0;
@@ -144,7 +144,7 @@ body {
     width: 100vw;
     height: 100vh;
     z-index: -1;
-    overflow: hidden;
+    overflow: hidden; /* این خط جلوی بیرون زدن حباب‌ها را می‌گیرد */
 }
 
 .blob {
@@ -154,63 +154,61 @@ body {
     opacity: 0.7;
 }
 
-/* موقعیت‌های اولیه جدید برای پوشش بهتر صفحه */
+/* ۱. موقعیت‌های اولیه جدید، نزدیک به مرکز و داخل کادر */
 .blob1 {
-    width: 500px;
-    height: 500px;
+    width: 400px;
+    height: 400px;
     background: rgba(163, 112, 247, 0.6); /* Purple */
-    top: -25vh;
-    left: -25vw;
-    animation: move_blob 15s infinite alternate ease-in-out;
+    top: 5vh;
+    left: 10vw;
+    animation: move_contained 15s infinite alternate ease-in-out;
 }
 
 .blob2 {
-    width: 450px;
-    height: 450px;
+    width: 350px;
+    height: 350px;
     background: rgba(0, 123, 255, 0.6); /* Blue */
-    bottom: -25vh;
-    right: -20vw;
-    animation: move_blob 12s infinite alternate ease-in-out;
+    bottom: 5vh;
+    right: 10vw;
+    animation: move_contained 12s infinite alternate ease-in-out -3s;
 }
 
 .blob3 {
-    width: 400px;
-    height: 400px;
+    width: 300px;
+    height: 300px;
     background: rgba(0, 255, 153, 0.5); /* Teal */
     top: 30vh;
-    right: -30vw;
-    animation: move_blob 14s infinite alternate ease-in-out;
+    right: 25vw;
+    animation: move_contained 14s infinite alternate ease-in-out -6s;
 }
 
 .blob4 {
-    width: 450px;
-    height: 450px;
+    width: 350px;
+    height: 350px;
     background: rgba(255, 0, 153, 0.5); /* Magenta */
-    bottom: 25vh;
-    left: -20vw;
-    animation: move_blob 13s infinite alternate ease-in-out;
+    bottom: 20vh;
+    left: 20vw;
+    animation: move_contained 13s infinite alternate ease-in-out -9s;
 }
 
-/* انیمیشن جدید و سریع‌تر */
-@keyframes move_blob {
+/* ۲. انیمیشن جدید با مسیر حرکت محدودتر */
+@keyframes move_contained {
     from {
-        /* حالت دور از هم و کوچکتر */
-        transform: translate(0, 0) scale(1);
+        transform: translate(0, 0) scale(1) rotate(0deg);
     }
     to {
-        /* حالت نزدیک به هم و بزرگتر، با کمی چرخش */
-        transform: translate(30vw, -20vh) scale(1.4) rotate(80deg);
+        /* مقادیر translate خیلی کمتر شده‌اند تا حباب‌ها از کادر خارج نشوند */
+        transform: translate(15vw, 10vh) scale(1.2) rotate(60deg);
     }
 }
-
 
 /* --- بهینه‌سازی برای موبایل (بدون تغییر) --- */
 @media (max-width: 768px) {
     .blob1, .blob2, .blob3, .blob4 {
-        width: 300px;
-        height: 300px;
+        width: 250px;
+        height: 250px;
     }
     .blob {
-        filter: blur(100px);
+        filter: blur(80px);
     }
 }
