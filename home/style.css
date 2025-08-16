@@ -136,13 +136,13 @@ body {
   }
 }
 
-/* --- Aurora Background Effect --- */
+/* --- Professional Aurora Background --- */
 .aurora-background {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw; /* کل عرض صفحه */
-    height: 100vh; /* کل ارتفاع صفحه */
+    width: 100vw;
+    height: 100vh;
     z-index: -1;
     overflow: hidden;
 }
@@ -150,63 +150,76 @@ body {
 .blob {
     position: absolute;
     border-radius: 50%;
-    /* بلور رو خیلی بیشتر می‌کنیم تا نرم‌تر بشه */
-    filter: blur(150px); 
-    opacity: 0.5;
+    filter: blur(150px);
+    opacity: 0.6;
 }
 
-/* تعریف حباب‌ها با اندازه‌ها، رنگ‌ها و انیمیشن‌های متفاوت */
+/* موقعیت‌های اولیه جدید برای پوشش بهتر صفحه */
 .blob1 {
-    width: 500px;
-    height: 500px;
+    width: 550px;
+    height: 550px;
     background: rgba(163, 112, 247, 0.6); /* Purple */
-    top: -200px;
-    left: -200px;
-    animation: move1 35s infinite alternate;
+    top: -10vh;
+    left: -20vw;
+    animation: pulsating_rotate 35s infinite ease-in-out;
 }
 
 .blob2 {
-    width: 450px;
-    height: 450px;
+    width: 500px;
+    height: 500px;
     background: rgba(0, 123, 255, 0.6); /* Blue */
-    bottom: -150px;
-    right: -150px;
-    animation: move2 30s infinite alternate;
+    bottom: -15vh;
+    right: -15vw;
+    animation: pulsating_rotate 30s infinite ease-in-out -5s; /* تاخیر متفاوت */
 }
 
 .blob3 {
-    width: 300px;
-    height: 300px;
+    width: 450px;
+    height: 450px;
     background: rgba(0, 255, 153, 0.5); /* Teal */
-    bottom: 50px;
-    left: 10%;
-    animation: move3 40s infinite alternate;
+    top: 20vh;
+    right: -25vw;
+    animation: pulsating_rotate 40s infinite ease-in-out -10s; /* تاخیر متفاوت */
 }
 
 .blob4 {
-    width: 400px;
-    height: 400px;
+    width: 500px;
+    height: 500px;
     background: rgba(255, 0, 153, 0.5); /* Magenta */
-    top: -100px;
-    right: -100px;
-    animation: move2 25s infinite alternate -10s; /* تاخیر منفی برای شروع از یک نقطه متفاوت */
+    bottom: -10vh;
+    left: 0vw;
+    animation: pulsating_rotate 32s infinite ease-in-out -15s; /* تاخیر متفاوت */
+}
+
+/* انیمیشن چرخشی و ضربان‌دار جدید */
+@keyframes pulsating_rotate {
+    0% {
+        transform: translate(0, 0) scale(1) rotate(0deg);
+    }
+    25% {
+        transform: translate(40vw, -20vh) scale(1.2) rotate(90deg);
+    }
+    50% {
+        transform: translate(20vw, 30vh) scale(0.8) rotate(180deg);
+    }
+    75% {
+        transform: translate(-30vw, 20vh) scale(1.1) rotate(270deg);
+    }
+    100% {
+        transform: translate(0, 0) scale(1) rotate(360deg);
+    }
 }
 
 
-/* --- انیمیشن‌های پیچیده‌تر برای حرکت ارگانیک --- */
-@keyframes move1 {
-    0%   { transform: scale(1)   translate(0, 0); }
-    50%  { transform: scale(1.2) translate(150px, -100px); }
-    100% { transform: scale(1)   translate(0, 0); }
-}
-
-@keyframes move2 {
-    from { transform: rotate(0deg)   translateX(50px) rotate(0deg); }
-    to   { transform: rotate(360deg) translateX(50px) rotate(-360deg); }
-}
-
-@keyframes move3 {
-    0%   { transform: translateY(0); }
-    50%  { transform: translateY(-150px); }
-    100% { transform: translateY(0); }
+/* --- بهینه‌سازی برای موبایل --- */
+@media (max-width: 768px) {
+    .blob1, .blob2, .blob3, .blob4 {
+        /* اندازه حباب‌ها در موبایل نصف می‌شود */
+        width: 300px;
+        height: 300px;
+    }
+    .blob {
+        /* بلور کمتر برای پرفورمنس بهتر در موبایل */
+        filter: blur(100px);
+    }
 }
