@@ -136,64 +136,96 @@ body {
   }
 }
 
-/* --- Ripple Background Effect --- */
-.ripple-background {
-    position: absolute; /* روی پس‌زمینه آرورا قرار می‌گیرد */
+/* --- Pulsating Aurora Background (Localized) --- */
+.aurora-background {
+    position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1; /* پشت محتوای اصلی ولی روی پس‌زمینه آرورا */
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
     overflow: hidden;
-
-    /* این خط باعث می‌شود امواج در پایین صفحه محو شوند، دقیقاً مثل نمونه */
-    mask-image: linear-gradient(to bottom, white 80%, transparent 100%);
-    -webkit-mask-image: linear-gradient(to bottom, white 80%, transparent 100%);
 }
 
-.ripple-circle {
-    position: absolute; /* تمام دایره‌ها روی هم قرار می‌گیرند */
-    border-radius: 50%; /* شکل دایره */
-
-    /* حاشیه ظریف با استفاده از متغیر رنگی خودمان */
-    border: 2px solid #a370f7;
-    opacity: 0.4;
-
-    /* اتصال به انیمیشن */
-    animation-name: ripple_effect;
-    animation-duration: 4s; /* مدت زمان هر موج */
-    animation-timing-function: ease-out;
-    animation-iteration-count: infinite; /* تکرار بی‌نهایت */
+.blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(150px);
+    opacity: 0.6;
+    /* مدت زمان کلی انیمیشن */
+    animation-duration: 5s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate; /* برای بزرگ و کوچک شدن رفت و برگشتی */
 }
 
-/* --- ایجاد تأخیر برای موج‌های متوالی --- */
-/* این بخش باعث می‌شود دایره‌ها پشت سر هم ظاهر شوند */
-.ripple-circle:nth-child(2) {
+/* موقعیت‌های ثابت و رنگ‌های مرتبط */
+.blob1 {
+    width: 400px;
+    height: 400px;
+    background: rgba(163, 112, 247, 0.7); /* Purple */
+    top: 10vh;
+    left: 15vw;
+    animation-name: pulsate1;
+}
+
+.blob2 {
+    width: 350px;
+    height: 350px;
+    background: rgba(123, 192, 255, 0.7); /* Light Blue */
+    bottom: 10vh;
+    right: 15vw;
+    animation-name: pulsate2;
+    animation-delay: 0.5s; /* کمی تاخیر برای ناهماهنگی */
+}
+
+.blob3 {
+    width: 300px;
+    height: 300px;
+    background: rgba(76, 224, 179, 0.6); /* Teal */
+    top: 40vh;
+    right: 25vw;
+    animation-name: pulsate3;
     animation-delay: 1s;
 }
-.ripple-circle:nth-child(3) {
-    animation-delay: 2s;
-}
-.ripple-circle:nth-child(4) {
-    animation-delay: 3s;
+
+.blob4 {
+    width: 380px;
+    height: 380px;
+    background: rgba(255, 117, 208, 0.6); /* Pink */
+    bottom: 30vh;
+    left: 20vw;
+    animation-name: pulsate4;
+    animation-delay: 1.5s;
 }
 
+/* انیمیشن‌های ضربانی موضعی (فقط تغییر اندازه و کمی جابجایی) */
+@keyframes pulsate1 {
+    from { transform: scale(1) translate(0, 0); }
+    to { transform: scale(1.1) translate(10px, -10px); }
+}
 
-/* --- تعریف انیمیشن موج --- */
-@keyframes ripple_effect {
-    from {
-        width: 0;
-        height: 0;
-        opacity: 0.5;
+@keyframes pulsate2 {
+    from { transform: scale(1) translate(0, 0); }
+    to { transform: scale(1.05) translate(-5px, 5px); }
+}
+
+@keyframes pulsate3 {
+    from { transform: scale(1) translate(0, 0); }
+    to { transform: scale(1.15) translate(-10px, -5px); }
+}
+
+@keyframes pulsate4 {
+    from { transform: scale(1) translate(0, 0); }
+    to { transform: scale(1.08) translate(5px, -15px); }
+}
+
+/* --- بهینه‌سازی برای موبایل (بدون تغییر) --- */
+@media (max-width: 768px) {
+    .blob {
+        filter: blur(100px);
     }
-    to {
-        /* یک اندازه خیلی بزرگ تا از صفحه خارج شود */
-        width: 1500px; 
-        height: 1500px;
-        opacity: 0;
-    }
+    .blob1 { width: 200px; height: 200px; }
+    .blob2 { width: 175px; height: 175px; }
+    .blob3 { width: 150px; height: 150px; }
+    .blob4 { width: 190px; height: 190px; }
 }
