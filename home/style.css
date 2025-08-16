@@ -67,8 +67,10 @@ body {
 
   /* --- ظاهر و اندازه --- */
   padding: var(--spacing-sm) 0; /* 8px فاصله داخلی بالا و پایین */
-  background-color: var(--c-nav);
-  border-top: 0.2px solid var(--c-border);
+  background-color: rgba(20, 20, 25, 0.5); /* پس‌زمینه نیمه‌شفاف */
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px); /* برای سازگاری با سافاری */
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .mobile-nav a {
@@ -96,8 +98,10 @@ body {
   .desktop-nav {
     display: block;
     padding: var(--spacing-md) 0; /* کمی فاصله داخلی از بالا و پایین */
-    border-bottom: 1px solid var(--c-border);
-    background-color: var(--c-background);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: rgba(20, 20, 25, 0.5); /* پس‌زمینه نیمه‌شفاف */
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
   }
 
   /* ۲. چیدمان داخل هدر با فلکس‌باکس */
@@ -130,4 +134,53 @@ body {
   .mobile-nav {
     display: none;
   }
+}
+
+/* --- Aurora Background Effect --- */
+.aurora-background {
+    position: fixed; /* ثابت در پس‌زمینه */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* پشت تمام محتوا قرار می‌گیرد */
+    overflow: hidden; /* برای اینکه حباب‌ها اسکرول ایجاد نکنند */
+}
+
+.blob {
+    position: absolute;
+    border-radius: 50%; /* حباب‌ها را دایره‌ای می‌کند */
+    filter: blur(120px); /* مهم‌ترین بخش برای محو کردن */
+    opacity: 0.4;
+}
+
+/* تعریف حباب اول */
+.blob1 {
+    width: 400px;
+    height: 400px;
+    background: #a370f7; /* رنگ بنفش */
+    top: -150px;
+    left: -150px;
+    animation: move1 25s infinite alternate;
+}
+
+/* تعریف حباب دوم */
+.blob2 {
+    width: 350px;
+    height: 350px;
+    background: #007BFF; /* رنگ آبی */
+    bottom: -100px;
+    right: -100px;
+    animation: move2 30s infinite alternate;
+}
+
+/* انیمیشن حرکت حباب‌ها */
+@keyframes move1 {
+    from { transform: translate(0, 0) rotate(0deg); }
+    to { transform: translate(200px, 100px) rotate(180deg); }
+}
+
+@keyframes move2 {
+    from { transform: translate(0, 0) scale(1); }
+    to { transform: translate(-100px, 50px) scale(1.2); }
 }
