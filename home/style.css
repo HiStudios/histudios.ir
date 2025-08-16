@@ -160,8 +160,8 @@ body {
     border-radius: 50%; /* شکل دایره */
 
     /* حاشیه ظریف با استفاده از متغیر رنگی خودمان */
-    border: 1px solid var(--c-primary-text);
-    opacity: 0.2; /* شفافیت اولیه */
+    border: 2px solid #a370f7;
+    opacity: 0.4;
 
     /* اتصال به انیمیشن */
     animation-name: ripple_effect;
