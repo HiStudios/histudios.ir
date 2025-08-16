@@ -136,79 +136,64 @@ body {
   }
 }
 
-/* --- Contained & Dynamic Aurora Background --- */
-.aurora-background {
-    position: fixed;
+/* --- Ripple Background Effect --- */
+.ripple-background {
+    position: absolute; /* روی پس‌زمینه آرورا قرار می‌گیرد */
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: -1;
-    overflow: hidden; /* این خط جلوی بیرون زدن حباب‌ها را می‌گیرد */
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* پشت محتوای اصلی ولی روی پس‌زمینه آرورا */
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+
+    /* این خط باعث می‌شود امواج در پایین صفحه محو شوند، دقیقاً مثل نمونه */
+    mask-image: linear-gradient(to bottom, white 80%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, white 80%, transparent 100%);
 }
 
-.blob {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(120px);
-    opacity: 0.7;
+.ripple-circle {
+    position: absolute; /* تمام دایره‌ها روی هم قرار می‌گیرند */
+    border-radius: 50%; /* شکل دایره */
+
+    /* حاشیه ظریف با استفاده از متغیر رنگی خودمان */
+    border: 1px solid var(--c-primary-text);
+    opacity: 0.2; /* شفافیت اولیه */
+
+    /* اتصال به انیمیشن */
+    animation-name: ripple_effect;
+    animation-duration: 4s; /* مدت زمان هر موج */
+    animation-timing-function: ease-out;
+    animation-iteration-count: infinite; /* تکرار بی‌نهایت */
 }
 
-/* ۱. موقعیت‌های اولیه جدید، نزدیک به مرکز و داخل کادر */
-.blob1 {
-    width: 400px;
-    height: 400px;
-    background: rgba(163, 112, 247, 0.6); /* Purple */
-    top: 5vh;
-    left: 10vw;
-    animation: move_contained 15s infinite alternate ease-in-out;
+/* --- ایجاد تأخیر برای موج‌های متوالی --- */
+/* این بخش باعث می‌شود دایره‌ها پشت سر هم ظاهر شوند */
+.ripple-circle:nth-child(2) {
+    animation-delay: 1s;
+}
+.ripple-circle:nth-child(3) {
+    animation-delay: 2s;
+}
+.ripple-circle:nth-child(4) {
+    animation-delay: 3s;
 }
 
-.blob2 {
-    width: 350px;
-    height: 350px;
-    background: rgba(0, 123, 255, 0.6); /* Blue */
-    bottom: 5vh;
-    right: 10vw;
-    animation: move_contained 12s infinite alternate ease-in-out -3s;
-}
 
-.blob3 {
-    width: 300px;
-    height: 300px;
-    background: rgba(0, 255, 153, 0.5); /* Teal */
-    top: 30vh;
-    right: 25vw;
-    animation: move_contained 14s infinite alternate ease-in-out -6s;
-}
-
-.blob4 {
-    width: 350px;
-    height: 350px;
-    background: rgba(255, 0, 153, 0.5); /* Magenta */
-    bottom: 20vh;
-    left: 20vw;
-    animation: move_contained 13s infinite alternate ease-in-out -9s;
-}
-
-/* ۲. انیمیشن جدید با مسیر حرکت محدودتر */
-@keyframes move_contained {
+/* --- تعریف انیمیشن موج --- */
+@keyframes ripple_effect {
     from {
-        transform: translate(0, 0) scale(1) rotate(0deg);
+        width: 0;
+        height: 0;
+        opacity: 0.5;
     }
     to {
-        /* مقادیر translate خیلی کمتر شده‌اند تا حباب‌ها از کادر خارج نشوند */
-        transform: translate(15vw, 10vh) scale(1.2) rotate(60deg);
-    }
-}
-
-/* --- بهینه‌سازی برای موبایل (بدون تغییر) --- */
-@media (max-width: 768px) {
-    .blob1, .blob2, .blob3, .blob4 {
-        width: 250px;
-        height: 250px;
-    }
-    .blob {
-        filter: blur(80px);
+        /* یک اندازه خیلی بزرگ تا از صفحه خارج شود */
+        width: 1500px; 
+        height: 1500px;
+        opacity: 0;
     }
 }
