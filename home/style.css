@@ -1,134 +1,133 @@
 /* --- style.css --- */
 /* --- Variables --- */
-:root{
-/* --- Default Theme: Dark --- */
+:root {
+  /* --- Default Theme: Dark --- */
 
-color-scheme: dark light;
+  color-scheme: dark light;
 
-/* --- Colors --- */
---c-primary-text: #ffffff;
---c-text: #f2f2f2;
---c-background: #000000;
---c-nav: #111111;
---c-border: #bfbfbf;
+  /* --- Colors --- */
+  --c-primary-text: #ffffff;
+  --c-text: #f2f2f2;
+  --c-background: #000000;
+  --c-nav: #111111;
+  --c-border: #bfbfbf;
 
-/* --- Spacing & Sizing --- */
---spacing-sm: 8px;
---spacing-md: 16px;
---spacing-lg: 32px;
---spacing-xl: 64px;
+  /* --- Spacing & Sizing --- */
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 32px;
+  --spacing-xl: 64px;
 
-/* --- Borders --- */
---border-radius-md: 16px;
---border-radius-lg: 24px;
+  /* --- Borders --- */
+  --border-radius-md: 16px;
+  --border-radius-lg: 24px;
 }
 
 /* --- Base & Reset Styles --- */
 *,
 *::before,
 *::after {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 html {
-    font-size: 16px; /* تعریف اندازه فونت پایه برای واحد rem */
+  font-size: 16px; /* تعریف اندازه فونت پایه برای واحد rem */
 }
 
 body {
-    margin: 0;
-    background-color: var(--c-background);
-    color: var(--c-text);
-    font-family: 'Vazirmatn', sans-serif;
-    
-    /* یک فضای امن در پایین صفحه برای اینکه محتوا زیر نوار ناوبری پنهان نشه */
-    padding-bottom: 80px; 
+  margin: 0;
+  background-color: var(--c-background);
+  color: var(--c-text);
+  font-family: "Vazirmatn", sans-serif;
+
+  /* یک فضای امن در پایین صفحه برای اینکه محتوا زیر نوار ناوبری پنهان نشه */
+  padding-bottom: 80px;
 }
 
 /* --- Main Content Container --- */
 .container {
-    width: 90%; /* محتوا 90% عرض صفحه رو اشغال می‌کنه */
-    max-width: 1200px; /* یک عرض حداکثر برای نمایش در دسکتاپ */
-    margin-left: auto; 
-    margin-right: auto;
+  width: 90%; /* محتوا 90% عرض صفحه رو اشغال می‌کنه */
+  max-width: 1200px; /* یک عرض حداکثر برای نمایش در دسکتاپ */
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* --- Mobile Navigation Bar --- */
 .mobile-nav {
-    /* --- موقعیت‌یابی --- */
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
+  /* --- موقعیت‌یابی --- */
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
 
-    /* --- چیدمان داخلی --- */
-    display: flex;
-    justify-content: space-around;
+  /* --- چیدمان داخلی --- */
+  display: flex;
+  justify-content: space-around;
 
-    /* --- ظاهر و اندازه --- */
-    padding: var(--spacing-sm) 0; /* 8px فاصله داخلی بالا و پایین */
-    background-color: var(--c-nav);
-    border-top: 0.2px solid var(--c-border);
+  /* --- ظاهر و اندازه --- */
+  padding: var(--spacing-sm) 0; /* 8px فاصله داخلی بالا و پایین */
+  background-color: var(--c-nav);
+  border-top: 0.2px solid var(--c-border);
 }
 
 .mobile-nav a {
-    color: var(--c-text);
-    text-decoration: none;
-    font-size: 14px;
-    
-    /* این سه خط برای وقتی هست که بعدا آیکن اضافه کردی */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px; /* فاصله بین آیکن و متن */
+  color: var(--c-text);
+  text-decoration: none;
+  font-size: 14px;
+
+  /* این سه خط برای وقتی هست که بعدا آیکن اضافه کردی */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px; /* فاصله بین آیکن و متن */
 }
 
 /* --- Desktop Navigation Header --- */
 
 /* در حالت پیش‌فرض (موبایل)، هدر دسکتاپ مخفی است */
 .desktop-nav {
-    display: none;
+  display: none;
 }
 
 /* حالا با مدیا کوئری، استایل‌های دسکتاپ را تعریف می‌کنیم */
 @media (min-width: 768px) {
+  /* ۱. هدر دسکتاپ را نمایش بده */
+  .desktop-nav {
+    display: block;
+    padding: var(--spacing-md) 0; /* کمی فاصله داخلی از بالا و پایین */
+    border-bottom: 1px solid var(--c-border);
+    background-color: var(--c-background);
+  }
 
-    /* ۱. هدر دسکتاپ را نمایش بده */
-    .desktop-nav {
-        display: block;
-        padding: var(--spacing-md) 0; /* کمی فاصله داخلی از بالا و پایین */
-        border-bottom: 1px solid var(--c-border);
-        background-color: var(--c-background);
-    }
-    
-    /* ۲. چیدمان داخل هدر با فلکس‌باکس */
-    .nav-container {
-        display: flex;
-        justify-content: space-between; /* لوگو و منو را به طرفین می‌چسباند */
-        align-items: center; /* همه چیز را عمودی در مرکز قرار می‌دهد */
-    }
+  /* ۲. چیدمان داخل هدر با فلکس‌باکس */
+  .nav-container {
+    display: flex;
+    justify-content: space-between; /* لوگو و منو را به طرفین می‌چسباند */
+    align-items: center; /* همه چیز را عمودی در مرکز قرار می‌دهد */
+  }
 
-    /* ۳. استایل لوگو و لینک‌ها */
-    .logo {
-        font-size: 1.5rem; /* 24px */
-        font-weight: bold;
-        color: var(--c-primary-text);
-        text-decoration: none;
-    }
+  /* ۳. استایل لوگو و لینک‌ها */
+  .logo {
+    font-size: 1.5rem; /* 24px */
+    font-weight: bold;
+    color: var(--c-primary-text);
+    text-decoration: none;
+  }
 
-    .main-menu a {
-        color: var(--c-text);
-        text-decoration: none;
-        margin-left: var(--spacing-lg); /* 32px فاصله بین لینک‌ها */
-        transition: color 0.2s ease;
-    }
+  .main-menu a {
+    color: var(--c-text);
+    text-decoration: none;
+    margin-left: var(--spacing-lg); /* 32px فاصله بین لینک‌ها */
+    transition: color 0.2s ease;
+  }
 
-    .main-menu a:hover {
-        color: var(--c-primary-text);
-    }
-    
-    /* ۴. نوار پایین موبایل را مخفی کن (این کد را قبلا هم داشتیم) */
-    .mobile-nav {
-        display: none;
-    }
+  .main-menu a:hover {
+    color: var(--c-primary-text);
+  }
+
+  /* ۴. نوار پایین موبایل را مخفی کن (این کد را قبلا هم داشتیم) */
+  .mobile-nav {
+    display: none;
+  }
 }
