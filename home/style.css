@@ -136,7 +136,7 @@ body {
   }
 }
 
-/* --- Pulsating Aurora Background (Localized) --- */
+/* --- High-Energy Rotational Aurora --- */
 .aurora-background {
     position: fixed;
     top: 0;
@@ -150,82 +150,81 @@ body {
 .blob {
     position: absolute;
     border-radius: 50%;
-    filter: blur(150px);
-    opacity: 0.6;
-    /* مدت زمان کلی انیمیشن */
-    animation-duration: 5s;
+    filter: blur(120px);
+    opacity: 0.7;
+    /* همه حباب‌ها از یک انیمیشن قدرتمند استفاده می‌کنند */
+    animation-name: lava_lamp_flow;
+    animation-timing-function: ease-in-out;
     animation-iteration-count: infinite;
-    animation-direction: alternate; /* برای بزرگ و کوچک شدن رفت و برگشتی */
 }
 
-/* موقعیت‌های ثابت و رنگ‌های مرتبط */
+/* موقعیت‌های اولیه و سرعت‌های متفاوت برای هر حباب */
 .blob1 {
-    width: 400px;
-    height: 400px;
-    background: rgba(163, 112, 247, 0.7); /* Purple */
-    top: 10vh;
-    left: 15vw;
-    animation-name: pulsate1;
+    width: 450px;
+    height: 450px;
+    background: rgba(163, 112, 247, 0.6); /* Purple */
+    top: 5vh;
+    left: 10vw;
+    animation-duration: 15s;
 }
 
 .blob2 {
-    width: 350px;
-    height: 350px;
-    background: rgba(123, 192, 255, 0.7); /* Light Blue */
-    bottom: 10vh;
-    right: 15vw;
-    animation-name: pulsate2;
-    animation-delay: 0.5s; /* کمی تاخیر برای ناهماهنگی */
+    width: 400px;
+    height: 400px;
+    background: rgba(0, 123, 255, 0.6); /* Blue */
+    bottom: 5vh;
+    right: 10vw;
+    animation-duration: 12s; /* سریع‌تر */
+    animation-delay: -3s; /* شروع از فاز متفاوت */
 }
 
 .blob3 {
-    width: 300px;
-    height: 300px;
-    background: rgba(76, 224, 179, 0.6); /* Teal */
-    top: 40vh;
-    right: 25vw;
-    animation-name: pulsate3;
-    animation-delay: 1s;
+    width: 350px;
+    height: 350px;
+    background: rgba(0, 255, 153, 0.5); /* Teal */
+    top: 30vh;
+    right: 5vw;
+    animation-duration: 18s; /* کندتر */
+    animation-delay: -6s;
 }
 
 .blob4 {
-    width: 380px;
-    height: 380px;
-    background: rgba(255, 117, 208, 0.6); /* Pink */
-    bottom: 30vh;
-    left: 20vw;
-    animation-name: pulsate4;
-    animation-delay: 1.5s;
+    width: 400px;
+    height: 400px;
+    background: rgba(255, 0, 153, 0.5); /* Magenta */
+    bottom: 20vh;
+    left: 5vw;
+    animation-duration: 14s;
+    animation-delay: -9s;
 }
 
-/* انیمیشن‌های ضربانی موضعی (فقط تغییر اندازه و کمی جابجایی) */
-@keyframes pulsate1 {
-    from { transform: scale(1) translate(0, 0); }
-    to { transform: scale(1.1) translate(10px, -10px); }
-}
-
-@keyframes pulsate2 {
-    from { transform: scale(1) translate(0, 0); }
-    to { transform: scale(1.05) translate(-5px, 5px); }
-}
-
-@keyframes pulsate3 {
-    from { transform: scale(1) translate(0, 0); }
-    to { transform: scale(1.15) translate(-10px, -5px); }
-}
-
-@keyframes pulsate4 {
-    from { transform: scale(1) translate(0, 0); }
-    to { transform: scale(1.08) translate(5px, -15px); }
-}
-
-/* --- بهینه‌سازی برای موبایل (بدون تغییر) --- */
-@media (max-width: 768px) {
-    .blob {
-        filter: blur(100px);
+/* انیمیشن چرخشی جدید که کل صفحه را پوشش می‌دهد */
+@keyframes lava_lamp_flow {
+    0% {
+        transform: translate(0, 0) scale(1) rotate(0deg);
     }
-    .blob1 { width: 200px; height: 200px; }
-    .blob2 { width: 175px; height: 175px; }
-    .blob3 { width: 150px; height: 150px; }
-    .blob4 { width: 190px; height: 190px; }
+    25% {
+        transform: translate(40vw, -30vh) scale(1.2) rotate(90deg);
+    }
+    50% {
+        transform: translate(10vw, 40vh) scale(0.9) rotate(180deg);
+    }
+    75% {
+        transform: translate(-30vw, -20vh) scale(1.1) rotate(270deg);
+    }
+    100% {
+        transform: translate(0, 0) scale(1) rotate(360deg);
+    }
+}
+
+
+/* --- بهینه‌سازی برای موبایل --- */
+@media (max-width: 768px) {
+    .blob1, .blob2, .blob3, .blob4 {
+        width: 250px;
+        height: 250px;
+    }
+    .blob {
+        filter: blur(80px);
+    }
 }
