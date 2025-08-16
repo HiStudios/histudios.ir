@@ -82,3 +82,53 @@ body {
     align-items: center;
     gap: 4px; /* فاصله بین آیکن و متن */
 }
+
+/* --- Desktop Navigation Header --- */
+
+/* در حالت پیش‌فرض (موبایل)، هدر دسکتاپ مخفی است */
+.desktop-nav {
+    display: none;
+}
+
+/* حالا با مدیا کوئری، استایل‌های دسکتاپ را تعریف می‌کنیم */
+@media (min-width: 768px) {
+
+    /* ۱. هدر دسکتاپ را نمایش بده */
+    .desktop-nav {
+        display: block;
+        padding: var(--spacing-md) 0; /* کمی فاصله داخلی از بالا و پایین */
+        border-bottom: 1px solid var(--c-border);
+        background-color: var(--c-background);
+    }
+    
+    /* ۲. چیدمان داخل هدر با فلکس‌باکس */
+    .nav-container {
+        display: flex;
+        justify-content: space-between; /* لوگو و منو را به طرفین می‌چسباند */
+        align-items: center; /* همه چیز را عمودی در مرکز قرار می‌دهد */
+    }
+
+    /* ۳. استایل لوگو و لینک‌ها */
+    .logo {
+        font-size: 1.5rem; /* 24px */
+        font-weight: bold;
+        color: var(--c-primary-text);
+        text-decoration: none;
+    }
+
+    .main-menu a {
+        color: var(--c-text);
+        text-decoration: none;
+        margin-left: var(--spacing-lg); /* 32px فاصله بین لینک‌ها */
+        transition: color 0.2s ease;
+    }
+
+    .main-menu a:hover {
+        color: var(--c-primary-text);
+    }
+    
+    /* ۴. نوار پایین موبایل را مخفی کن (این کد را قبلا هم داشتیم) */
+    .mobile-nav {
+        display: none;
+    }
+}
